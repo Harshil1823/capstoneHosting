@@ -1,0 +1,31 @@
+<% layout('layouts/boilerplate') %>
+
+<link rel="stylesheet" href="/css/task.css">
+
+<div class="container-fluid">
+  <div class="row">
+    <% if (currentUser) { %>
+    <div class="col-md-3">
+      <%- include('../partials/user_panel') %>
+    </div>
+    <div class="col-md-6">
+      <h1>Index Page for Viewing Tasks</h1>
+      <% if (tasks.length === 0) { %>
+      <p>No tasks available</p>
+      <% } else { %>
+      <ul>
+        <% tasks.forEach(task => { %>
+        <li><a href="/tasks/<%= task._id %>"><%= task.title %></a></li>
+        <% }) %>
+      </ul>
+      <% } %>
+      <a href="/tasks/new">
+        <button>Add Task</button>
+      </a>
+    </div>
+    <div class="col-md-3">
+      <%- include('../partials/info_panel') %>
+    </div>
+    <% } %>
+  </div>
+</div>

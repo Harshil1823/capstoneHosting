@@ -1,0 +1,23 @@
+.high-priority {
+    background-color: #ff6b6b; /* Red for high priority */
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  
+  .medium-priority {
+    background-color: #ffa502; /* Yellow for medium priority */
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+  }
+  
+  .low-priority {
+    background-color: #1dd1a1; /* Green for low priority */
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-weight: bold;
+  }

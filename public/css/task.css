@@ -1,0 +1,41 @@
+.container-fluid {
+  padding: 20px;
+}
+
+.button-container {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+h1, h2 {
+  color: #1a1464;
+}
+
+button {
+  background-color: #2a1f8f;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.5s;
+}
+
+button:hover {
+  background-color: #ff6b8b;
+}
+
+.form-control {
+  margin-bottom: 15px;
+}
+
+.invalid-feedback {
+  color: red;
+}
+
+.alert-container {
+  max-width: 800px;
+  margin: 20px auto;
+}

@@ -1,0 +1,75 @@
+<nav class="navbar navbar-expand-lg" style="background-color: #110777;">
+    <div class="container d-flex justify-content-between align-items-center">
+        <!-- Left: Logo and Task Manager -->
+        <a href="/" class="d-flex align-items-center text-decoration-none">
+            <img src="/images/logo.png" alt="Task Manager Logo" style="height: 40px; margin-right: 10px;">
+            <% if (!currentUser) { %>
+                <span class="navbar-brand text-white fw-bold mb-0">Task Manager</span>
+            <% } else { %>
+                <span class="navbar-brand text-white fw-bold mb-0">Task Manager</span>
+            <% } %>
+        </a>
+  
+        <!-- Right: Navbar links -->
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link text-white" href="/tasks" style="transition: 0.3s;">Index</a>
+                <a class="nav-link text-white" href="/tasks/new" style="transition: 0.3s;">New Task</a>
+            </div>
+        </div>
+  
+        <!-- Mobile Toggle -->
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon text-white"></span>
+        </button>
+    </div>
+  </nav>
+  
+  <style>
+    /* Navbar overall styles */
+    .navbar {
+        position: fixed;
+        top: 0;
+        z-index: 1000;
+        width: 100%;
+        height: 60px; /* Set a fixed height for consistency */
+    }
+     /* Add padding to ensure content is not covered by the fixed navbar */
+     body {
+        padding-top: 60px; /* Matches the navbar height */
+    }
+  
+    /* Styling for the logo and brand text */
+    .navbar-brand {
+        font-size: 1.5rem;
+    }
+  
+    .navbar img {
+        height: 40px;
+        margin-right: 10px;
+    }
+  
+    /* Navbar link styles */
+    .navbar-nav .nav-link {
+        font-size: 1.1rem;
+        padding: 8px 15px;
+    }
+  
+    .navbar-nav .nav-link:hover {
+        background-color: #1687A7; /* Slightly lighter shade of the navbar color */
+        border-radius: 5px;
+        color: #ffffff !important;
+    }
+  
+    /* Flexbox spacing adjustments */
+    .container {
+        display: flex;
+        justify-content: space-between; /* Push left and right sections apart */
+        align-items: center;
+    }
+  
+    /* Ensures navbar links align right when collapsed */
+    .navbar-collapse {
+        justify-content: flex-end; /* Push navbar links to the right */
+    }
+  </style>
