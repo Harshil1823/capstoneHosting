@@ -1,37 +1,138 @@
 <% layout('layouts/boilerplate') %>
 <%- include('../partials/user_panel') %>
-<%- include('../partials/info_panel') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/css/profilestyles.css">
+</head>
+<body>
+    <%- include('../partials/navbar') %>
+    
+    <div class="profile-container">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-image">
+                <% if (user.profileImage && user.profileImage.url) { %>
+                    <img src="<%= user.profileImage.url %>" alt="Profile Picture">
+                <% } else { %>
+                    <div class="default-profile">Default Profile Picture</div>
+                <% } %>
+            </div>
+            
+            <!-- Separate Form for Image Upload -->
+            <div class="profile-image-upload">
+                <form action="/profile" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="profileImage">Select Profile Image:</label>
+                        <input type="file" name="profileImage" id="profileImage" accept="image/*">
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Update Photo</button>
+                </form>
+            </div>
+            
+            <h1 class="profile-name"><%= user.firstName || 'User' %> <%= user.lastName || '' %></h1>
+            <p class="profile-username">@<%= user.username || 'username' %></p>
+        </div>
 
-<link rel="stylesheet" href="/css/profilestyles.css">
-<div class="profile-container">
-    <div class="profile-header">
-      <div class="profile-image">
-        <img src="<%= user.profilePicture || '/images/deafult-user.jpg' %>" alt="Profile Picture">
-      </div>
-      <h1 class="profile-name"><%= user.firstName %> <%= user.lastName %></h1>
-      <p class="profile-username">@<%= user.username %></p>
+        <!-- Task Statistics -->
+        <div class="stats-container">
+            <h2>Task Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-box">
+                    <span class="stat-number"><%= (analytics?.tasksCreated || 0) + (analytics?.tasksCompleted || 0) %></span>
+                    <span class="stat-label">Total Tasks</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number"><%= analytics?.tasksCompleted || 0 %></span>
+                    <span class="stat-label">Completed</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number"><%= analytics?.tasksCreated || 0 %></span>
+                    <span class="stat-label">Created</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number"><%= Math.round(analytics?.overdueRate || 0) %>%</span>
+                    <span class="stat-label">Overdue Rate</span>
+                </div>
+            </div>
+                    
+            <!-- Analytics-based metrics -->
+            <% if (analytics) { %>
+            <div class="analytics-insights">
+                <h3>Performance Insights</h3>
+                <div class="insights-grid">
+                    <div class="insight-box">
+                        <span class="insight-value"><%= Math.round(analytics.averageCompletionTime || 0) %> hrs</span>
+                        <span class="insight-label">Avg. Completion Time</span>
+                    </div>
+                    <div class="insight-box">
+                        <span class="insight-value"><%= Math.round(analytics.overdueRate || 0) %>%</span>
+                        <span class="insight-label">Overdue Rate</span>
+                    </div>
+                    <div class="insight-box">
+                        <span class="insight-value"><%= analytics.tasksCreated || 0 %></span>
+                        <span class="insight-label">Created Tasks</span>
+                    </div>
+                    <div class="insight-box">
+                        <span class="insight-value"><%= analytics.tasksCompleted || 0 %></span>
+                        <span class="insight-label">Completed Tasks</span>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+        </div>
+
+        <!-- Profile Details Form -->
+        <div class="profile-details">
+            <h2>Profile Information</h2>
+            <form action="/profile?_method=PUT" method="POST" class="profile-form">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" value="<%= user.firstName || '' %>" required>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" value="<%= user.lastName || '' %>" required>
+                </div>
+                <div class="form-group">
+                    <label for="workEmail">Work Email</label>
+                    <input type="email" id="workEmail" name="workEmail" value="<%= user.workEmail || '' %>" required>
+                </div>
+                <div class="form-group">
+                    <label for="phoneNumber">Phone Number</label>
+                    <input type="tel" id="phoneNumber" name="phoneNumber" value="<%= user.phoneNumber || '' %>">
+                </div>
+                <div class="form-group">
+                    <label for="company">Company</label>
+                    <input type="text" id="company" value="<%= user.company ? user.company.name : 'Not specified' %>" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <input type="text" id="role" value="<%= user.role || 'Not specified' %>" disabled>
+                </div>
+                <button type="submit" class="btn btn-primary">Update Profile</button>
+            </form>
+        </div>
+
+        <!-- Change Password Section -->
+        <div class="password-section">
+            <h2>Change Password</h2>
+            <form action="/change-password" method="POST" class="password-form">
+                <div class="form-group">
+                    <label for="currentPassword">Current Password</label>
+                    <input type="password" id="currentPassword" name="currentPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="newPassword">New Password</label>
+                    <input type="password" id="newPassword" name="newPassword" required>
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword">Confirm New Password</label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" required>
+                </div>
+                <button type="submit" class="btn btn-secondary">Change Password</button>
+            </form>
+        </div>
     </div>
-  
-    <div class="profile-details">
-      <div class="detail-row">
-        <span class="detail-label">Company Name:</span>
-        <span class="detail-value"><%= user.companyName %></span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Work Email:</span>
-        <span class="detail-value"><%= user.workEmail %></span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Role:</span>
-        <span class="detail-value"><%= user.role %></span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Tasks:</span>
-        <span class="detail-value"><%= user.tasks.length > 0 ? user.tasks.length : 'None' %></span>
-      </div>
-      <div class="detail-row">
-        <span class="detail-label">Departments:</span>
-        <span class="detail-value"><%= user.departments.length > 0 ? user.departments.length : 'None' %></span>
-      </div>
-    </div>
-  </div>
+</body>
+</html>

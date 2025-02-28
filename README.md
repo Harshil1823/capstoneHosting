@@ -2,7 +2,15 @@
 
 Welcome to **spurssupdev**! 
 
-This is a simple application featuring a basic home page where we resolved our merge conflicts for our Source Control Milestone.
+This project is a part of our Capstone course at the University of South Carolina. The application is designed to manage tasks efficiently within a retail environment. Below is the current status of the application:
+
+## Table of Contents
+1. [External Requirements](#external-requirements)
+2. [Setup](#setup)
+3. [Running](#running)
+4. [Testing](#testing)
+5. [Testing Technology](#testing-technology)
+6. [Authors](#authors)
 
 ## External Requirements
 
@@ -36,7 +44,63 @@ Before you begin, ensure you have met the following requirements (Each link will
 
 **Access to the App's web page**
 
-    Open your web browser and go to http://localhost:3000/ to view the app.
+Open your web browser and go to http://localhost:3000/ to view the app.
+
+## Testing
+
+We have set up automated unit and behavioral tests for our application:
+
+**Unit Testing**
+
+* To run the unit tests, use the following command:
+
+    ```bash
+    npm test
+    ```
+
+* Unit tests are located in our `/tests/` directory
+
+**Behavioral Testing**
+
+To run the behavioral tests, follow these steps:
+
+1. Open another terminal, navigate to the project directory, and run the commands in the [Setup](#setup) portion.
+
+2. Run the Cypress Test Runner in a second terminal:
+
+    ```bash
+    npm run cy:open
+    ```
+
+3. Once the Cypress window opens, click the **End to End Testing** button. If not previously configured, it should run a configuration command.
+
+4. Choose a desired browser (we recommend either **Electron** or **Chrome**) and click **"Start End to End Testing"**.
+
+5. Choose any of the files titled `*Test.cy.js` to run a specific test. Make sure the application is running in another terminal per Step 1.
+
+* Behavioral tests are located in our `/cypress/e2e/` directory
+
+## Testing Technology
+
+**Jest (Unit Testing)**
+
+* Unit testing was accomplished using [Jest](https://jestjs.io)
+
+  To install Jest, use the following command:
+
+    ```bash
+    npm install --save-dev jest
+    ```
+
+**Cypress (Behavioral Testing)**
+
+* Behavioral testing was accomplished using [Cypress](https://www.cypress.io/)
+
+  To install Cypress, use the following command:
+
+    ```bash
+    npm install --save-dev cypress
+    ```
 
 # Authors
 

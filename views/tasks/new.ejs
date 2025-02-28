@@ -82,8 +82,20 @@
             }
           }
         </script>
-        <!-- Image URL Field -->
 
+        <!-- Assigned To Dropdown -->
+        <div class="form-group">
+          <label for="assignedTo">Assign To</label>
+          <select id="assignedTo" name="assignedTo" class="form-control">
+            <option value="">-- Select a user (optional) --</option>
+            <% users.forEach(user => { %>
+              <option value="<%= user._id %>"><%= user.username %></option>
+            <% }); %>
+          </select>
+          <div class="invalid-feedback">Please select a valid user.</div>
+        </div>
+
+        <!-- Image URL Field -->
         <label for="imageUrl" class="form-label">Image URL</label>
         <input type="file" class="form-control" id="imageUrl" name="imageUrl" placeholder="Enter image URL" multiple>
 

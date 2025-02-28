@@ -1,29 +1,46 @@
 <nav class="navbar navbar-expand-lg" style="background-color: #110777;">
     <div class="container d-flex justify-content-between align-items-center">
         <!-- Left: Logo and Task Manager -->
-        <a href="/" class="d-flex align-items-center text-decoration-none">
-            <img src="/images/logo.png" alt="Task Manager Logo" style="height: 40px; margin-right: 10px;">
-            <% if (!currentUser) { %>
+        <% if (currentUser) { %>
+            <a href="/tasks" class="d-flex align-items-center text-decoration-none">
+                <img src="/images/logo.png" alt="Task Manager Logo" style="height: 40px; margin-right: 10px;">
                 <span class="navbar-brand text-white fw-bold mb-0">Task Manager</span>
-            <% } else { %>
+            </a>
+        <% } else { %>
+            <a href="/" class="d-flex align-items-center text-decoration-none">
+                <img src="/images/logo.png" alt="Task Manager Logo" style="height: 40px; margin-right: 10px;">
                 <span class="navbar-brand text-white fw-bold mb-0">Task Manager</span>
-            <% } %>
-        </a>
-  
+            </a>
+        <% } %>
+
         <!-- Right: Navbar links -->
+        <% if (currentUser) { %>
+        <!-- Show these links ONLY when user is logged in -->
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ms-auto">
                 <a class="nav-link text-white" href="/tasks" style="transition: 0.3s;">Index</a>
                 <a class="nav-link text-white" href="/tasks/new" style="transition: 0.3s;">New Task</a>
             </div>
         </div>
-  
-        <!-- Mobile Toggle -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <% } else { %>
+        <!-- Show these links ONLY when user is NOT logged in -->
+        <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link text-white" href="/login" style="transition: 0.3s;">Login</a>
+                <a class="nav-link text-white" href="/register" style="transition: 0.3s;">Sign Up</a>
+            </div>
+        </div>
+        <% } %>
+
+        <!-- Mobile Toggle (show only when there are links) -->
+        <% if (currentUser) { %>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup" 
+                aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon text-white"></span>
         </button>
+        <% } %>
     </div>
-  </nav>
+</nav>
   
   <style>
     /* Navbar overall styles */
@@ -56,11 +73,8 @@
     }
   
     .navbar-nav .nav-link:hover {
-        background-color: #1687A7; /* Slightly lighter shade of the navbar color */
-        border-radius: 5px;
-        color: #ffffff !important;
-    }
-  
+        background-color: rgba(255, 255, 255, 0.1); /* Original subtle hover */
+    }   
     /* Flexbox spacing adjustments */
     .container {
         display: flex;

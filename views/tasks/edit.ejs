@@ -80,16 +80,28 @@
             }
           }
         </script>
+        
+        <!-- Assigned To Dropdown -->
+        <div class="form-group">
+          <label class="form-label" for="assignedTo">Assign Task To</label>
+          <select id="assignedTo" name="assignedTo" class="form-control">
+            <option value="">-- Leave Unassigned --</option>
+            <% users.forEach(user => { %>
+              <option value="<%= user._id %>" <%= task.assignedTo && task.assignedTo.equals(user._id) ? "selected" : "" %>><%= user.username %></option>
+            <% }); %>
+          </select>
+          <div class="invalid-feedback">Please select a valid user if assigning.</div>
+        </div>
 
         <!-- Image URL Field with Default Value -->
-          <!-- Add file input for new images -->
         <div>
             <label class="form-label" for="images">Upload Images</label>
             <input class="form-control" type="file" id="images" name="imageUrl" multiple>
             <small class="form-text text-muted">You can upload multiple images.</small>
         </div>
 
-        <button type="submit">Update Task</button>
+        <button type="submit" class="btn btn-success">Update Task</button>
+        <a href="/tasks/<%= task._id %>" class="btn btn-secondary">Back</a>
       </form>
     </div>
     <div class="col-md-3">

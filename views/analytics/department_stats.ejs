@@ -1,0 +1,27 @@
+<div class="department-performance">
+    <h2>Department Task Performance</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Department</th>
+                <th>Tasks Completed</th>
+                <th>Tasks Pending</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% if (departmentAnalytics && departmentAnalytics.length > 0) { %>
+                <% departmentAnalytics.forEach(dept => { %>
+                    <tr>
+                        <td><%= dept.department.name %></td>
+                        <td><%= dept.tasksCompleted %></td>
+                        <td><%= dept.tasksPending %></td>
+                    </tr>
+                <% }); %>
+            <% } else { %>
+                <tr>
+                    <td colspan="3">Error: No department data available.</td>
+                </tr>
+            <% } %>
+        </tbody>
+    </table>
+</div>

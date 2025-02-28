@@ -1,3 +1,4 @@
+// If the environment is not production, load environment variables from a .env file
 if(process.env.NODE_ENV !== 'production') {
   require('dotenv').config();
 }
@@ -20,6 +21,7 @@ const passport = require('passport'); // Import Passport for authentication
 const LocalStrategy = require('passport-local'); // Import Passport's local strategy for username/password authentication
 //requering the session to store on mongodb
 const MongoDBStore = require('connect-mongo');
+app.use(methodOverride('_method'));
 
 //require the user model
 const User = require('./models/user');
@@ -31,16 +33,33 @@ const Department = require('./models/department');
 //acquriing the routes
 const tasksRoute = require('./routes/tasks');
 const userRoute = require('./routes/users');
+const companiesRoute = require('./routes/companies');
+const scheduleRoutes = require('./routes/schedule');
+const commentRoutes = require('./routes/comments');
+const requestsRoute = require('./routes/requests');
+// may not need
+const analyticRoute = require('./routes/analytics');
 
 const mongoose = require('mongoose');
-dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/retailTasking';
+// commenting out the line below we don't need to push to envrionment variable at the moment
+// we need to store locally other wise mongodb cloud storage will get full
+// dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/retailTasking';
+// Explanation:
+// 1. Check if the NODE_ENV environment variable is set to 'test'.
+// 2. If true, use the TEST_DB_URL environment variable for the test database.
+// 3. If false, use the DB_URL environment variable for the production database.
+// 4. If DB_URL is not set, default to 'mongodb://127.0.0.1:27017/retailTasking', which is a local MongoDB instance.
+const dbUrl = process.env.NODE_ENV === 'test' 
+  ? process.env.TEST_DB_URL 
+  : process.env.DB_URL || 'mongodb://127.0.0.1:27017/retailTasking';
+
 mongoose.connect(dbUrl, {
 
 });
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, "Connection error:"));
 db.once("open", () => {
-    console.log("Database connected")
+  console.log(`Database connected: ${dbUrl}`);
 })
 
 
@@ -116,6 +135,17 @@ app.use((req, res, next)=> {
 app.use('/', userRoute);
 //specify the route we want to use for tasks
 app.use('/tasks', tasksRoute);
+//specify the route we want to use for schedules
+app.use('/schedules', scheduleRoutes);
+//specify the route we want to use for company
+app.use('/companies', companiesRoute);
+//specify the route we want for comments 
+app.use('/tasks/:id/comments', commentRoutes);
+//request routes
+app.use('/requests', requestsRoute);
+
+// specify route for analytics
+// app.use('', analyticRoute);
 
 // Define the route for the home page
 app.get('/', (req, res) => {
@@ -147,3 +177,5 @@ app.use((err, req, res, next) => {
 app.listen(3000, () => {
   console.log(`Server is running on port 3000`);
 });
+
+module.exports = app; // Export the app instance

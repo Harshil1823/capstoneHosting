@@ -59,6 +59,16 @@ const taskSchema = new Schema({
     ref: 'User',
     required: true, // Ensure every task has an author
   },
+  isOverdue: { type: Boolean, default: false },
+  company: {
+    type : mongoose.Schema.Types.ObjectId,
+    ref : 'Company',
+    required: true //every task must belong to some company
+  },
+  comments : {
+    type : mongoose.Schema.Types.ObjectId,
+    ref : 'Comment'
+  }
 });
 
 // Export the Task model based on the schema

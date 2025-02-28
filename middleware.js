@@ -18,6 +18,11 @@ module.exports.storeReturnTo = (req, res, next) => {
 }
 
 module.exports.isAuthor = async (req, res, next) => {
+    // If the user is an admin, skip the author check
+    if (req.user && req.user.role === 'Admin') {
+        return next();
+    }
+    
     const { id } = req.params;
     const task = await Task.findById(id);
     if (!task) {
@@ -29,4 +34,29 @@ module.exports.isAuthor = async (req, res, next) => {
         return res.redirect(`/tasks/${id}`);
     }
     next();
+}
+
+module.exports.ensureAuthenticated = (req, res, next) => {
+    if (req.isAuthenticated()) {
+        return next();
+    }
+    req.flash('error_msg', 'Please log in to view that resource');
+    res.redirect('/login');
 };
+
+module.exports.isManager = (req, res, next) => {
+    // Allow managers and admins to view history
+    if (req.user && (req.user.role === 'Manager' || req.user.role === 'Admin')) {
+      return next();
+    }
+    req.flash('error', 'Access denied: Only managers can view task history.');
+    return res.redirect('/tasks');
+};
+
+module.exports.ensureAdminOrManager = (req, res, next) => {
+    if (req.isAuthenticated() && (req.user.role === 'Admin' || req.user.role === 'Manager')) {
+        return next();
+    }
+    req.flash('error', 'You do not have permission to perform this action.');
+    res.redirect('/schedules');
+}

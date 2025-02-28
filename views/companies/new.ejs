@@ -1,0 +1,31 @@
+<% layout('layouts/boilerplate') %>
+
+<h1>Create a New Company</h1>
+<form action="/companies" method="POST" class="needs-validation" novalidate>
+  <div class="form-group">
+    <label for="name" class="form-label">Company Name</label>
+    <input type="text" id="name" name="name" class="form-control" required>
+    <div class="invalid-feedback">Please provide a company name.</div>
+  </div>
+  <div class="form-group">
+    <label for="street" class="form-label">Street</label>
+    <input type="text" id="street" name="street" class="form-control" required>
+    <div class="invalid-feedback">Please provide a street address.</div>
+  </div>
+  <div class="form-group">
+    <label for="city" class="form-label">City</label>
+    <input type="text" id="city" name="city" class="form-control" required>
+    <div class="invalid-feedback">Please provide a city.</div>
+  </div>
+  <div class="form-group">
+    <label for="state" class="form-label">State</label>
+    <input type="text" id="state" name="state" class="form-control" required>
+    <div class="invalid-feedback">Please provide a state.</div>
+  </div>
+  <div class="form-group">
+    <label for="zipCode" class="form-label">Zip Code</label>
+    <input type="text" id="zipCode" name="zipCode" class="form-control" required>
+    <div class="invalid-feedback">Please provide a zip code.</div>
+  </div>
+  <button type="submit" class="btn btn-primary mt-3">Create Company</button>
+</form>

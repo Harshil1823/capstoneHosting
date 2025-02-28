@@ -23,6 +23,11 @@
     <%- include('../partials/flash') %>
     <%- body %>
 
+    <!-- User object used for verification -->
+    <script>
+        const currentUser = <%- JSON.stringify(currentUser) %>;
+    </script>
+
     <!-- If you’re using our compiled JavaScript and prefer to i
      nclude Popper separately, add Popper before our JS, 
      via a CDN preferably.

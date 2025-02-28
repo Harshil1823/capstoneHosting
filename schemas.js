@@ -27,7 +27,9 @@ const taskSchema = Joi.object({
   newDepartment: Joi.string().optional().allow('').messages({
     'string.empty': 'New department name cannot be empty',
   }),
-  imageUrl: Joi.string().uri().optional().allow('').messages({
+   // Add assignedTo as an optional string (or ObjectId in string format)
+   assignedTo: Joi.string().optional().allow(''),
+   imageUrl: Joi.string().uri().optional().allow('').messages({
     'string.uri': 'Image URL must be a valid URI',
   }),
 });
