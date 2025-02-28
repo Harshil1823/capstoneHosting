@@ -45,3 +45,8 @@ package.json
 .ionide
 
 # End of https://www.toptal.com/developers/gitignore/api/visualstudiocode
+
+# Cypress cache and binaries
+.cache/
+cypress/screenshots/
+cypress/videos/
