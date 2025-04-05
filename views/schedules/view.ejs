@@ -1,0 +1,57 @@
+<!-- Use the boilerplate layout -->
+<% layout('layouts/boilerplate') %>
+
+<!-- Link to the schedule CSS file -->
+<link rel="stylesheet" href="/css/schedule.css">
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Check if the current user is logged in -->
+    <% if (currentUser) { %>
+    <div class="col-md-3">
+      <!-- Include the user panel partial -->
+      <%- include('../partials/user_panel') %>
+    </div>
+    <div class="col-md-6">
+      <!-- Page title -->
+      <h1>Schedule Details</h1>
+      <div>
+        <!-- Display the employee name -->
+        <label class="form-label" for="employeeName">Employee Name</label>
+        <p class="form-control-plaintext" id="employeeName"><%= schedule.employeeName %></p>
+      </div>
+      <div>
+        <!-- Display the week start date -->
+        <label class="form-label" for="weekStartDate">Week Start Date</label>
+        <p class="form-control-plaintext" id="weekStartDate"><%= new Date(schedule.weekStartDate).toDateString() %></p>
+      </div>
+      <!-- Table to display the schedule details -->
+      <table class="table table-bordered mt-4">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Define the days of the week -->
+          <% const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']; %>
+          <!-- Loop through each day and display the schedule details -->
+          <% daysOfWeek.forEach(day => { %>
+          <tr>
+            <td><%= schedule.days[day] && schedule.days[day].date ? new Date(schedule.days[day].date).toDateString() : '' %></td>
+            <td><%= schedule.days[day] && schedule.days[day].startTime ? new Date(schedule.days[day].startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '' %></td>
+            <td><%= schedule.days[day] && schedule.days[day].endTime ? new Date(schedule.days[day].endTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '' %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <!-- Button to edit the current schedule -->
+      <a href="/schedules/<%= schedule._id %>/edit" class="btn btn-primary">Edit Schedule</a>
+      <!-- Button to go back to the schedules list -->
+      <a href="/schedules" class="btn btn-secondary">Back to Schedules</a>
+    </div>
+    <% } %>
+  </div>
+</div>

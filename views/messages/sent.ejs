@@ -1,0 +1,75 @@
+<% layout('layouts/boilerplate') %>
+<%- include('../partials/user_panel') %>
+
+<link rel="stylesheet" href="/css/messages.css">
+
+<div class="container mt-4" style="margin-left: 250px; width: calc(100% - 250px); max-width: calc(100% - 250px);">
+    <h1>Messages</h1>
+    
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a class="nav-link" href="/messages/inbox">Inbox</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/messages/sent">Sent</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-4 text-end">
+            <a href="/messages/new" class="btn btn-primary">New Message</a>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Search messages..." id="messageSearch">
+                <button class="btn btn-outline-secondary" type="button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="list-group">
+                <% if (messages.length === 0) { %>
+                    <div class="list-group-item">
+                        <p class="text-muted">You haven't sent any messages yet.</p>
+                    </div>
+                <% } %>
+                
+                <% messages.forEach(msg => { %>
+                    <a href="/messages/<%= msg._id %>" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar me-3">
+                                    <div class="rounded-circle bg-secondary text-white text-center" style="width: 40px; height: 40px; line-height: 40px;">
+                                        <%= msg.recipient.firstName ? msg.recipient.firstName.charAt(0) + msg.recipient.lastName.charAt(0) : msg.recipient.username.substring(0, 2).toUpperCase() %>
+                                    </div>
+                                </div>
+                                <div style="max-width: calc(100% - 60px); overflow-wrap: break-word;">
+                                    <h5 class="mb-1 text-truncate">
+                                        To: <%= msg.recipient.firstName ? `${msg.recipient.firstName} ${msg.recipient.lastName}` : msg.recipient.username %>
+                                        <span class="text-muted small"><%= msg.subject %></span>
+                                    </h5>
+                                    <p class="mb-1 text-truncate" style="max-width: 100%;">
+                                        <%= msg.content %>
+                                    </p>
+                                </div>
+                            </div>
+                            <small class="text-muted ms-2">
+                                <%= new Date(msg.createdAt).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) %>
+                            </small>
+                        </div>
+                    </a>
+                <% }) %>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Include the message search JavaScript -->
+<script src="/javascripts/messageSearch.js"></script>

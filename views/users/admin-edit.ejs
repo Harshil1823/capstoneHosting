@@ -1,0 +1,100 @@
+<% layout('layouts/boilerplate') %>
+<%- include('../partials/user_panel') %>
+
+<div class="user-management-wrapper">
+  <div class="user-management-content">
+    <div class="content-inner">
+      <h1 class="h2">Edit User</h1>
+      
+      <div class="card mt-3">
+        <div class="card-header bg-primary text-white">
+          <h3>Edit User: <%= user.username %></h3>
+        </div>
+        <div class="card-body">
+          <form action="/admin/users/<%= user._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+            <div class="row">
+              <div class="col-lg-8 col-md-12">
+                <div class="mb-3">
+                  <label for="firstName" class="form-label">First Name</label>
+                  <input type="text" class="form-control" id="firstName" name="firstName" value="<%= user.firstName || '' %>">
+                </div>
+                
+                <div class="mb-3">
+                  <label for="lastName" class="form-label">Last Name</label>
+                  <input type="text" class="form-control" id="lastName" name="lastName" value="<%= user.lastName || '' %>">
+                </div>
+                
+                <div class="mb-3">
+                  <label for="workEmail" class="form-label">Work Email</label>
+                  <input type="email" class="form-control" id="workEmail" name="workEmail" value="<%= user.workEmail || '' %>" required>
+                </div>
+                
+                <div class="mb-3">
+                  <label for="phoneNumber" class="form-label">Phone Number</label>
+                  <input type="tel" class="form-control" id="phoneNumber" name="phoneNumber" value="<%= user.phoneNumber || '' %>">
+                </div>
+                
+                <div class="mb-3">
+                  <label for="hireDate" class="form-label">Hire Date</label>
+                  <input type="date" class="form-control" id="hireDate" name="hireDate" 
+                         value="<%= user.hireDate ? user.hireDate.toISOString().substring(0, 10) : '' %>">
+                  <small class="text-muted">Date when employee was hired</small>
+                </div>
+                
+                <div class="mb-3">
+                  <label for="role" class="form-label">Role</label>
+                  <select class="form-select" id="role" name="role" required>
+                    <option value="Employee" <%= user.role === 'Employee' ? 'selected' : '' %>>Employee</option>
+                    <option value="Manager" <%= user.role === 'Manager' ? 'selected' : '' %>>Manager</option>
+                    <option value="Admin" <%= user.role === 'Admin' ? 'selected' : '' %>>Admin</option>
+                  </select>
+                </div>
+                
+                <div class="mb-3">
+                  <label for="profileImage" class="form-label">Profile Image</label>
+                  <input type="file" class="form-control" id="profileImage" name="profileImage" accept="image/*">
+                </div>
+                
+                <div class="mb-3">
+                  <label class="form-label">Company</label>
+                  <input type="text" class="form-control" value="<%= user.company ? (user.company.name || '') : 'Not specified' %>" disabled>
+                </div>
+                
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mb-4">
+                  <a href="/admin/users" class="btn btn-secondary me-md-2">Cancel</a>
+                  <button type="submit" class="btn btn-primary">Update User</button>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .user-management-wrapper {
+    padding-left: 250px; /* exactly match sidebar width */
+  }
+
+  .user-management-content {
+    padding: 20px;
+    width: 100%;
+  }
+
+  .content-inner {
+    max-width: 100%;
+  }
+
+  /* Responsive adjustment */
+  @media (max-width: 930px) {
+    .user-management-wrapper {
+      padding-left: 0;
+    }
+    
+    .user-management-content {
+      padding-left: 70px; /* Space for menu button */
+    }
+  }
+</style>

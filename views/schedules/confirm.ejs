@@ -1,0 +1,61 @@
+<!-- Use the boilerplate layout -->
+<% layout('layouts/boilerplate') %>
+
+<!-- Link to the schedule CSS file -->
+<link rel="stylesheet" href="/css/schedule.css">
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Check if the current user is logged in -->
+    <% if (currentUser) { %>
+    <div class="col-md-3">
+      <!-- Include the user panel partial -->
+      <%- include('../partials/user_panel') %>
+    </div>
+    <div class="col-md-6">
+      <!-- Page title -->
+      <h1>Confirm Schedule</h1>
+      <!-- Form to confirm the schedule -->
+      <form action="/schedules/create" method="POST">
+        <div>
+          <!-- Display the employee name -->
+          <label class="form-label" for="employeeName">Employee Name</label>
+          <input class="form-control" type="text" id="employeeName" name="employeeName" value="<%= schedule.employeeName %>" readonly>
+        </div>
+        <div>
+          <!-- Display the week start date -->
+          <label class="form-label" for="weekStartDate">Week Start Date</label>
+          <input class="form-control" type="date" id="weekStartDate" name="weekStartDate" value="<%= schedule.weekStartDate %>" readonly>
+        </div>
+        <!-- Table to display the schedule details -->
+        <table class="table table-bordered mt-4">
+          <thead>
+            <tr>
+              <th>Day</th>
+              <th>Date</th>
+              <th>Start Time</th>
+              <th>End Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Define the days of the week -->
+            <% const daysOfWeek = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday']; %>
+            <!-- Loop through each day and display the schedule details -->
+            <% daysOfWeek.forEach(day => { %>
+            <tr>
+              <td><%= day.charAt(0).toUpperCase() + day.slice(1) %></td>
+              <td><input class="form-control" type="date" name="days[<%= day %>][date]" value="<%= schedule.days[day].date %>" readonly></td>
+              <td><input class="form-control" type="time" name="days[<%= day %>][startTime]" value="<%= schedule.days[day].startTime %>" readonly></td>
+              <td><input class="form-control" type="time" name="days[<%= day %>][endTime]" value="<%= schedule.days[day].endTime %>" readonly></td>
+            </tr>
+            <% }); %>
+          </tbody>
+        </table>
+        <!-- Buttons to confirm or edit the schedule -->
+        <button type="submit" class="btn btn-primary">Confirm</button>
+        <a href="/schedules/new" class="btn btn-secondary">Edit</a>
+      </form>
+    </div>
+    <% } %>
+  </div>
+</div>

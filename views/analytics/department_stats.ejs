@@ -1,0 +1,29 @@
+<div class="department-performance container mt-4" style="margin-left: -15px;">
+    <h2 class="mb-4" style="text-align: left;">Department Task Performance</h2>
+    <div>
+        <table class="table table-bordered">
+            <thead class="table-header">
+                <tr>
+                    <th scope="col">Department</th>
+                    <th scope="col">Tasks Completed</th>
+                    <th scope="col">Tasks Pending</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% if (departmentAnalytics && departmentAnalytics.length > 0) { %>
+                    <% departmentAnalytics.forEach(dept => { %>
+                        <tr>
+                            <td><%= dept.department.name %></td>
+                            <td><%= dept.tasksCompleted %></td>
+                            <td><%= dept.tasksPending %></td>
+                        </tr>
+                    <% }); %>
+                <% } else { %>
+                    <tr>
+                        <td colspan="3" class="text-center text-danger">No department data available.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</div>

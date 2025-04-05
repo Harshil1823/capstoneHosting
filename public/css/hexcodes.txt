@@ -1,0 +1,10 @@
+
+Navbar - #110777
+Purple button - #1E1A1A
+Footer - #1C1C1C
+Sign up and login button - #515DEF
+Green button - #2EB40A
+Red label - #D32424
+Orange label - #FF9900
+Yellow label - #E2C806
+Light Blue - #E7F6FD

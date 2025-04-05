@@ -1,0 +1,160 @@
+
+/* Message list styling */
+.list-group-item {
+  transition: background-color 0.2s ease;
+}
+
+.list-group-item:hover {
+  background-color: #f8f9fa;
+}
+
+.list-group-item.unread {
+  border-left: 3px solid #007bff;
+}
+
+/* Avatar styling */
+.avatar .rounded-circle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+}
+
+/* Message thread styling */
+.message-thread {
+  max-height: 60vh;
+  overflow-y: auto;
+  padding-right: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.message {
+  margin-bottom: 1rem;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.message-body {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  position: relative;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.sender .message-body {
+  background-color: #e6f7ff;
+  border: 1px solid #b3e0ff;
+}
+
+.recipient .message-body {
+  background-color: #f5f5f5;
+  border: 1px solid #e0e0e0;
+}
+
+/* Message composition area */
+.compose-area {
+  border-top: 1px solid #dee2e6;
+  padding-top: 1rem;
+}
+
+.compose-area textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Search input styling */
+#messageSearch {
+  border-radius: 20px;
+  padding-left: 2.5rem;
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16"><path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: 0.75rem center;
+  background-size: 1rem;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .message-content {
+      max-width: 80%;
+  }
+  
+  .sender .message-content {
+      margin-left: auto;
+  }
+}
+
+/* Notification badge animation */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+#message-badge:not(.d-none) {
+  animation: pulse 1s infinite;
+}
+
+/* Styling for the content area with sidebar */
+.main-content {
+  margin-left: 250px; /* Width of your sidebar */
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 930px) {
+  .main-content {
+      margin-left: 0;
+      width: 100%;
+  }
+  
+  /* When sidebar is active, adjust main content */
+  .left-side-page-bar.active ~ .main-content {
+      margin-left: 250px;
+  }
+}
+
+/* Fix for container to not overlap sidebar */
+.container.mt-4 {
+  margin-left: 0;
+  width: 100%;
+  max-width: calc(100% - 20px);
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* For medium screens and up - prevent sidebar overlap */
+@media (min-width: 768px) {
+  .container.mt-4 {
+    margin-left: 250px; /* Match your sidebar width */
+    width: calc(100% - 250px);
+    max-width: calc(100% - 250px);
+  }
+}
+
+/* Override any Bootstrap container max-width restrictions */
+@media (min-width: 1200px) {
+  .container.mt-4 {
+    max-width: calc(100% - 250px);
+  }
+}
+
+/* Ensure message content doesn't overflow */
+.message-content {
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Ensure responsiveness on very small screens */
+@media (max-width: 576px) {
+  .container.mt-4 {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
