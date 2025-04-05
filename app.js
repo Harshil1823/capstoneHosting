@@ -45,7 +45,7 @@ const analyticRoute = require('./routes/analytics');
 const mongoose = require('mongoose');
 // commenting out the line below we don't need to push to envrionment variable at the moment
 // we need to store locally other wise mongodb cloud storage will get full
-dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/retailTasking';
+//dbUrl = process.env.DB_URL || 'mongodb://127.0.0.1:27017/retailTasking';
 // Explanation:
 // 1. Check if the NODE_ENV environment variable is set to 'test'.
 // 2. If true, use the TEST_DB_URL environment variable for the test database.
