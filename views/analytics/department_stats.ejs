@@ -15,7 +15,7 @@
                         <tr>
                             <td><%= dept.department.name %></td>
                             <td><%= dept.tasksCompleted %></td>
-                            <td><%= dept.tasksPending %></td>
+                            <td><%= dept.tasksCreated - dept.tasksCompleted %></td>
                         </tr>
                     <% }); %>
                 <% } else { %>
