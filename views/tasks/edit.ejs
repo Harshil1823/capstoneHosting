@@ -1,0 +1,114 @@
+<% layout('layouts/boilerplate') %>
+
+<link rel="stylesheet" href="/css/task.css">
+
+<div class="container-fluid">
+  <div class="row">
+    <% if (currentUser) { %>
+    <div class="col-md-3">
+      <%- include('../partials/user_panel') %>
+    </div>
+    <div class="col-md-6">
+      <h1>Edit Task</h1>
+
+    <form action="/tasks/<%= task._id %>?_method=PUT" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+        <!-- Title Field with Default Value -->
+        <div>
+          <label class="form-label" for="title">Title</label>
+          <input class="form-control" type="text" id="title" name="title" value="<%= task.title %>" required>
+          <div class="invalid-feedback">Please provide a title.</div>
+        </div>
+
+        <!-- Description Field with Default Value -->
+        <div>
+          <label class="form-label" for="description">Description</label>
+          <textarea class="form-control" id="description" name="description" required><%= task.description %></textarea>
+          <div class="invalid-feedback">Please provide a description.</div>
+        </div>
+
+        <!-- Due Date Field with Default Value -->
+        <div>
+          <label class="form-label" for="dueDate">Due Date</label>
+          <input class="form-control" type="date" id="dueDate" name="dueDate" value="<%= task.dueDate.toISOString().substring(0, 10) %>" required>
+          <div class="invalid-feedback">Please provide a valid due date.</div>
+        </div>
+
+        <!-- Importance Field with Selected Value -->
+        <div>
+          <label class="form-label" for="importance">Importance</label>
+          <select id="importance" name="importance" required>
+            <option value="">Select Priority</option>
+            <option value="High Priority" <%= task.importance === "High Priority" ? "selected" : "" %>>High Priority</option>
+            <option value="Medium Priority" <%= task.importance === "Medium Priority" ? "selected" : "" %>>Medium Priority</option>
+            <option value="Low Priority" <%= task.importance === "Low Priority" ? "selected" : "" %>>Low Priority</option>
+          </select>
+          <div class="invalid-feedback">Please select the importance level.</div>
+        </div>
+
+        <!-- Location Field with Default Value -->
+        <div>
+          <label class="form-label" for="location">Location</label>
+          <input class="form-control" type="text" id="location" name="location" value="<%= task.location %>" required>
+          <div class="invalid-feedback">Please provide a location.</div>
+        </div>
+
+        <!-- Department Selection with Default Value -->
+        <label class="form-label" for="department">Department:</label>
+        <select id="department" name="department" onchange="toggleNewDepartmentField()">
+          <% departments.forEach(department => { %>
+          <option value="<%= department._id %>" <%= task.department.equals(department._id) ? "selected" : "" %>><%= department.name %></option>
+          <% }) %>
+          <option value="new">Other (Add New)</option>
+        </select>
+
+        <!-- Field for adding a new department, hidden by default -->
+        <div class="form-label" id="new-department-field" style="display: none;">
+          <label for="new-department">New Department:</label>
+          <input class="form-control" type="text" name="newDepartment" id="new-department" />
+          <div class="invalid-feedback">Please provide a valid department name.</div>
+        </div>
+
+        <script>
+          function toggleNewDepartmentField() {
+            const departmentSelect = document.getElementById('department');
+            const newDepartmentField = document.getElementById('new-department-field');
+            const newDepartmentInput = document.getElementById('new-department');
+            
+            // If "Other" is selected, show the new department input field
+            if (departmentSelect.value === 'new') {
+                newDepartmentField.style.display = 'block';
+                newDepartmentInput.setAttribute('required', 'required');
+            } else {
+                // Hide the new department input field if any existing department is selected
+                newDepartmentField.style.display = 'none';
+                newDepartmentInput.removeAttribute('required');
+            }
+          }
+        </script>
+        
+        <!-- Assigned To Dropdown -->
+        <div class="form-group">
+          <label class="form-label" for="assignedTo">Assign Task To</label>
+          <select id="assignedTo" name="assignedTo" class="form-control">
+            <option value="">-- Leave Unassigned --</option>
+            <% users.forEach(user => { %>
+              <option value="<%= user._id %>" <%= task.assignedTo && task.assignedTo.equals(user._id) ? "selected" : "" %>><%= user.username %></option>
+            <% }); %>
+          </select>
+          <div class="invalid-feedback">Please select a valid user if assigning.</div>
+        </div>
+
+        <!-- Image URL Field with Default Value -->
+        <div>
+            <label class="form-label" for="images">Upload Images</label>
+            <input class="form-control" type="file" id="images" name="imageUrl" multiple>
+            <small class="form-text text-muted">You can upload multiple images.</small>
+        </div>
+
+        <button type="submit" class="btn btn-success">Update Task</button>
+        <a href="/tasks/<%= task._id %>" class="btn btn-secondary">Back</a>
+      </form>
+    </div>
+    <% } %>
+  </div>
+</div>

@@ -1,0 +1,39 @@
+<div class="department-performance container mt-4" style="margin-left: -15px;">
+    <!-- Section Header -->
+    <h2 class="mb-4" style="text-align: left;">Department Task Performance</h2>
+    
+    <div>
+        <!-- Table displaying department task performance -->
+        <table class="table table-bordered">
+            <thead class="table-header">
+                <tr>
+                    <!-- Table column headers -->
+                    <th scope="col">Department</th>
+                    <th scope="col">Tasks Completed</th>
+                    <th scope="col">Tasks Pending</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Check if department analytics data is available -->
+                <% if (departmentAnalytics && departmentAnalytics.length > 0) { %>
+                    <!-- Loop through each department's analytics data -->
+                    <% departmentAnalytics.forEach(dept => { %>
+                        <tr>
+                            <!-- Display department name -->
+                            <td><%= dept.department.name %></td>
+                            <!-- Display number of tasks completed -->
+                            <td><%= dept.tasksCompleted %></td>
+                            <!-- Calculate and display number of pending tasks -->
+                            <td><%= dept.tasksCreated - dept.tasksCompleted %></td>
+                        </tr>
+                    <% }); %>
+                <% } else { %>
+                    <!-- Display message if no department data is available -->
+                    <tr>
+                        <td colspan="3" class="text-center text-danger">No department data available.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</div>

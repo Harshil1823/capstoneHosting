@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Analytics Diagnostics</title>
+    <style>
+        /* General styling for the page */
+        body { 
+            font-family: monospace; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            line-height: 1.6; 
+        }
+        /* Styling for headers */
+        h1, h2 { 
+            border-bottom: 1px solid #333; 
+            padding-bottom: 10px; 
+        }
+        /* Styling for sections */
+        .section {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            background-color: #f9f9f9;
+        }
+        /* Styling for preformatted text blocks */
+        pre {
+            background-color: #f4f4f4;
+            padding: 10px;
+            overflow-x: auto;
+        }
+        /* Styling for error messages */
+        .error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <!-- Page Header -->
+    <h1>Analytics Diagnostics Dashboard</h1>
+
+    <!-- Loading Section -->
+    <div id="loading" class="section">
+        <h2>Loading Analytics...</h2>
+        <p>Fetching comprehensive analytics data</p>
+    </div>
+
+    <!-- Error Section (hidden by default) -->
+    <div id="error" class="section error" style="display: none;">
+        <h2>Error Retrieving Analytics</h2>
+        <pre id="error-message"></pre>
+    </div>
+
+    <!-- Analytics Data Container (hidden by default) -->
+    <div id="analytics-container" style="display: none;">
+        <!-- Daily Statistics Section -->
+        <div id="daily-stats" class="section">
+            <h2>Daily Statistics</h2>
+            <pre id="daily-stats-content"></pre>
+        </div>
+
+        <!-- Department Statistics Section -->
+        <div id="department-stats" class="section">
+            <h2>Department Statistics</h2>
+            <pre id="department-stats-content"></pre>
+        </div>
+
+        <!-- User Statistics Section -->
+        <div id="user-stats" class="section">
+            <h2>User Statistics</h2>
+            <pre id="user-stats-content"></pre>
+        </div>
+
+        <!-- Priority Statistics Section -->
+        <div id="priority-stats" class="section">
+            <h2>Priority Statistics</h2>
+            <pre id="priority-stats-content"></pre>
+        </div>
+
+        <!-- Raw Analytics Data Section -->
+        <div id="raw-data" class="section">
+            <h2>Raw Analytics JSON</h2>
+            <pre id="raw-data-content"></pre>
+        </div>
+    </div>
+
+    <script>
+        // Function to fetch analytics data from the server
+        async function fetchAnalytics() {
+            try {
+                // Fetch analytics data from the server endpoint
+                const response = await fetch('/analytics/diagnostics');
+                
+                // Check if the response is successful
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                // Parse the JSON response
+                const analytics = await response.json();
+                
+                // Hide the loading section and display the analytics container
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('analytics-container').style.display = 'block';
+                
+                // Display Daily Statistics
+                document.getElementById('daily-stats-content').textContent = JSON.stringify({
+                    tasksCreated: analytics.dailyStats.tasksCreated,
+                    tasksCompleted: analytics.dailyStats.tasksCompleted,
+                    tasksOverdue: analytics.dailyStats.tasksOverdue,
+                    tasksViewed: analytics.dailyStats.tasksViewed,
+                    tasksUpdated: analytics.dailyStats.tasksUpdated,
+                    tasksDeleted: analytics.dailyStats.tasksDeleted,
+                    averageCompletionTime: analytics.dailyStats.averageCompletionTime
+                }, null, 2);
+                
+                // Display Department Statistics
+                document.getElementById('department-stats-content').textContent = 
+                    analytics.departmentStats.map(dept => JSON.stringify({
+                        department: dept.department ? dept.department.name : 'Unnamed',
+                        tasksCreated: dept.tasksCreated,
+                        tasksCompleted: dept.tasksCompleted,
+                        modificationsCount: dept.modificationsCount,
+                        deletionsCount: dept.deletionsCount,
+                        averageCompletionTime: dept.averageCompletionTime,
+                        overdueRate: dept.overdueRate
+                    }, null, 2)).join('\n\n');
+                
+                // Display User Statistics
+                document.getElementById('user-stats-content').textContent = 
+                    analytics.userStats.map(user => JSON.stringify({
+                        username: user.user ? user.user.username : 'Unnamed',
+                        tasksCompleted: user.tasksCompleted,
+                        tasksCreated: user.tasksCreated,
+                        tasksAssigned: user.tasksAssigned,
+                        averageCompletionTime: user.averageCompletionTime,
+                        overdueRate: user.overdueRate,
+                        loginCount: user.loginCount
+                    }, null, 2)).join('\n\n');
+                
+                // Display Priority Statistics
+                document.getElementById('priority-stats-content').textContent = JSON.stringify({
+                    highPriority: {
+                        total: analytics.priorityStats.highPriority.total,
+                        completed: analytics.priorityStats.highPriority.completed,
+                        averageCompletionTime: analytics.priorityStats.highPriority.averageCompletionTime
+                    },
+                    mediumPriority: {
+                        total: analytics.priorityStats.mediumPriority.total,
+                        completed: analytics.priorityStats.mediumPriority.completed,
+                        averageCompletionTime: analytics.priorityStats.mediumPriority.averageCompletionTime
+                    },
+                    lowPriority: {
+                        total: analytics.priorityStats.lowPriority.total,
+                        completed: analytics.priorityStats.lowPriority.completed,
+                        averageCompletionTime: analytics.priorityStats.lowPriority.averageCompletionTime
+                    }
+                }, null, 2);
+                
+                // Display Raw Analytics Data
+                document.getElementById('raw-data-content').textContent = 
+                    JSON.stringify(analytics, null, 2);
+                
+            } catch (error) {
+                // Handle errors by displaying the error section
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('error').style.display = 'block';
+                document.getElementById('error-message').textContent = 
+                    `Failed to fetch analytics:\n${error.message}\n\nStack Trace:\n${error.stack}`;
+                console.error('Analytics Fetch Error:', error);
+            }
+        }
+
+        // Call the fetchAnalytics function when the page loads
+        fetchAnalytics();
+    </script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<% layout('layouts/boilerplate') %>
+<%- include('../partials/user_panel') %>
+
+<div class="user-management-wrapper">
+  <div class="user-management-content">
+    <div class="content-inner">
+      <h1 class="h2">User Management</h1>
+      
+      <div class="card mt-3">
+        <div class="card-header bg-primary text-white">
+          <h3>Company Users</h3>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Username</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Hire Date</th>
+                  <th>Role</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% users.forEach(user => { %>
+                  <tr>
+                    <td><%= user.username %></td>
+                    <td><%= user.firstName || '' %> <%= user.lastName || '' %></td>
+                    <td><%= user.workEmail %></td>
+                    <td>
+                      <% if (user.hireDate) { %>
+                        <%= user.hireDate.toLocaleDateString() %>
+                      <% } else { %>
+                        Not set
+                      <% } %>
+                    </td>
+                    <td>
+                      <span class="badge <%= user.role === 'Admin' ? 'bg-danger' : 
+                                        user.role === 'Manager' ? 'bg-warning' : 
+                                        'bg-info' %>">
+                        <%= user.role %>
+                      </span>
+                    </td>
+                    <td>
+                      <a href="/admin/users/<%= user._id %>" class="btn btn-primary btn-sm">
+                        <i class="fas fa-edit"></i> Edit
+                      </a>
+                    </td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* Simple, reliable layout for user management */
+  .user-management-wrapper {
+    padding-left: 250px; /* match sidebar width */
+    padding-top: 0;
+  }
+
+  .user-management-content {
+    padding: 20px;
+    width: 100%;
+  }
+
+  .content-inner {
+    max-width: 100%;
+  }
+
+  /* Responsive adjustment */
+  @media (max-width: 930px) {
+    .user-management-wrapper {
+      padding-left: 0;
+    }
+    
+    .user-management-content {
+      padding-left: 70px; /* Space for menu button */
+    }
+  }
+  
+  /* Better table styling for mobile */
+  @media (max-width: 768px) {
+    .table th, .table td {
+      padding: 0.5rem;
+      font-size: 0.9rem;
+    }
+    
+    .btn-sm {
+      padding: 0.25rem 0.4rem;
+      font-size: 0.75rem;
+    }
+  }
+</style>

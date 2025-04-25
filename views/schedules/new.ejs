@@ -1,0 +1,92 @@
+<!-- Use the boilerplate layout -->
+<% layout('layouts/boilerplate') %>
+
+<!-- Link to the schedule CSS file -->
+<link rel="stylesheet" href="/css/schedule.css">
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Check if the current user is logged in -->
+    <% if (currentUser) { %>
+    <div class="col-md-3">
+      <!-- Include the user panel partial -->
+      <%- include('../partials/user_panel') %>
+    </div>
+    <div class="col-md-6">
+      <!-- Page title -->
+      <h1>Create Schedule</h1>
+      <!-- Form to create a new schedule -->
+      <form action="/schedules/confirm" method="POST">
+        <div>
+          <!-- Select the employee name -->
+          <label class="form-label" for="employeeName">Employee Name</label>
+          <select class="form-control" id="employeeName" name="employeeName" required>
+            <option value="" disabled selected>Please select an employee</option>
+            <% employees.forEach(employee => { %>
+              <option value="<%= employee.username %>"><%= employee.username %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div>
+          <!-- Input for the week start date -->
+          <label class="form-label" for="weekStartDate">Week Start Date</label>
+          <input class="form-control" type="date" id="weekStartDate" name="weekStartDate" required>
+          <div class="invalid-feedback">Please provide a week start date.</div>
+        </div>
+        <!-- Table to input the schedule details for each day -->
+        <table class="table table-bordered mt-4">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Start Time</th>
+              <th>End Time</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><input class="form-control" type="date" id="sundayDate" name="days[sunday][date]" required></td>
+              <td><input class="form-control" type="time" id="sundayStart" name="days[sunday][startTime]"></td>
+              <td><input class="form-control" type="time" id="sundayEnd" name="days[sunday][endTime]"></td>
+            </tr>
+            <tr>
+              <td><input class="form-control" type="date" id="mondayDate" name="days[monday][date]" required></td>
+              <td><input class="form-control" type="time" id="mondayStart" name="days[monday][startTime]"></td>
+              <td><input class="form-control" type="time" id="mondayEnd" name="days[monday][endTime]"></td>
+            </tr>
+            <tr>
+              <td><input class="form-control" type="date" id="tuesdayDate" name="days[tuesday][date]" required></td>
+              <td><input class="form-control" type="time" id="tuesdayStart" name="days[tuesday][startTime]"></td>
+              <td><input class="form-control" type="time" id="tuesdayEnd" name="days[tuesday][endTime]"></td>
+            </tr>
+            <tr>
+              <td><input class="form-control" type="date" id="wednesdayDate" name="days[wednesday][date]" required></td>
+              <td><input class="form-control" type="time" id="wednesdayStart" name="days[wednesday][startTime]"></td>
+              <td><input class="form-control" type="time" id="wednesdayEnd" name="days[wednesday][endTime]"></td>
+            </tr>
+            <tr>
+              <td><input class="form-control" type="date" id="thursdayDate" name="days[thursday][date]" required></td>
+              <td><input class="form-control" type="time" id="thursdayStart" name="days[thursday][startTime]"></td>
+              <td><input class="form-control" type="time" id="thursdayEnd" name="days[thursday][endTime]"></td>
+            </tr>
+            <tr>
+              <td><input class="form-control" type="date" id="fridayDate" name="days[friday][date]" required></td>
+              <td><input class="form-control" type="time" id="fridayStart" name="days[friday][startTime]"></td>
+              <td><input class="form-control" type="time" id="fridayEnd" name="days[friday][endTime]"></td>
+            </tr>
+            <tr>
+              <td><input class="form-control" type="date" id="saturdayDate" name="days[saturday][date]" required></td>
+              <td><input class="form-control" type="time" id="saturdayStart" name="days[saturday][startTime]"></td>
+              <td><input class="form-control" type="time" id="saturdayEnd" name="days[saturday][endTime]"></td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- Button to submit the form and verify the new schedule -->
+        <button type="submit" class="btn btn-primary">Verify New Schedule</button>
+      </form>
+    </div>
+    <% } %>
+  </div>
+</div>
+
+<!-- Include the calendar JavaScript file -->
+<script src="/javascripts/calendar.js"></script>

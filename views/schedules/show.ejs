@@ -1,0 +1,48 @@
+<!-- Use the boilerplate layout -->
+<% layout('layouts/boilerplate') %>
+
+<!-- Link to the schedule CSS file -->
+<link rel="stylesheet" href="/css/schedule.css">
+
+<div class="container-fluid">
+  <div class="row">
+    <!-- Check if the current user is logged in -->
+    <% if (currentUser) { %>
+    <div class="col-md-3">
+      <!-- Include the user panel partial -->
+      <%- include('../partials/user_panel') %>
+    </div>
+    <div class="col-md-6">
+      <!-- Page title -->
+      <h1>Schedules</h1>
+      <!-- Table to display the list of schedules -->
+      <table class="table table-bordered mt-4">
+        <thead>
+          <tr>
+            <th>Employee Name</th>
+            <th>Week Start Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Loop through each schedule and display its details -->
+          <% schedules.forEach(schedule => { %>
+          <tr>
+            <td><%= schedule.employeeName %></td>
+            <td><%= new Date(schedule.weekStartDate).toDateString() %></td>
+            <td>
+              <!-- Button to view the schedule -->
+              <a href="/schedules/<%= schedule._id %>" class="btn btn-primary">View</a>
+              <!-- Button to delete the schedule -->
+              <a href="/schedules/<%= schedule._id %>/delete" class="btn btn-danger">Delete</a>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+      <!-- Button to create a new schedule -->
+      <a href="/schedules/new" class="btn btn-success">Create New Schedule</a>
+    </div>
+    <% } %>
+  </div>
+</div>

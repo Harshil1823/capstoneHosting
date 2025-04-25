@@ -1,0 +1,198 @@
+<% layout('layouts/boilerplate') %>
+<!-- Specify the layout template to use -->
+
+<%- include('../partials/user_panel') %>
+<!-- Include the user panel partial -->
+
+<div class="page-container">
+  <h1 class="header">Submit Change Request</h1>
+  <!-- Page header -->
+
+  <div class="form-container">
+    <form action="/requests" method="POST" class="needs-validation" novalidate>
+      <!-- Form for submitting a new change request -->
+
+      <div class="form-group">
+        <!-- Input field for the request title -->
+        <label for="title">Request Title</label>
+        <input type="text" name="title" id="title" class="form-control" required>
+      </div>
+
+      <div class="form-group">
+        <!-- Textarea for the request description -->
+        <label for="description">Request Description</label>
+        <textarea name="description" id="description" rows="5" class="form-control" required></textarea>
+      </div>
+
+      <!-- Optional fields -->
+      <div class="form-group">
+        <!-- Input field for the affected user -->
+        <label for="affectedUser">Affected User (if applicable)</label>
+        <input type="text" name="affectedUser" id="affectedUser" class="form-control" placeholder="User ID or username">
+      </div>
+
+      <div class="form-group">
+        <!-- Input field for the affected department -->
+        <label for="department">Affected Department (if applicable)</label>
+        <input type="text" name="department" id="department" class="form-control" placeholder="Department ID or name">
+      </div>
+
+      <button type="submit" class="btn btn-primary">Submit Request</button>
+      <!-- Submit button for the form -->
+    </form>
+  </div>
+</div>
+
+<style>
+/* General page layout */
+.page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: calc(100% - 250px);
+  margin-left: 250px;
+  padding: 20px;
+}
+
+/* Header styling */
+.header {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Form container styling */
+.form-container {
+  width: 100%;
+  max-width: 700px;
+  background: #ffffff;
+  padding: 25px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+}
+
+/* Form elements */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+/* Improve textarea appearance */
+textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+/* Button styling */
+.btn-primary {
+  width: 100%;
+  padding: 12px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  background-color: #007bff;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+/* Responsive adjustments */
+/* For large screens that are starting to get tight */
+@media (max-width: 1200px) {
+  .form-container {
+    max-width: 650px;
+    padding: 20px;
+  }
+}
+
+/* For medium screens where the overlap starts to occur */
+@media (max-width: 1000px) {
+  .page-container {
+    width: calc(100% - 250px);
+    margin-left: 250px;
+    padding: 15px 10px;
+  }
+  
+  .form-container {
+    max-width: 600px;
+    padding: 15px;
+  }
+  
+  .header {
+    font-size: 2.2rem;
+    margin-bottom: 15px;
+  }
+}
+
+/* For the specific problem range (910px) */
+@media (max-width: 950px) {
+  .page-container {
+    width: calc(100% - 250px);
+    margin-left: 250px;
+    padding: 10px 5px;
+  }
+  
+  .form-container {
+    width: 95%;
+    max-width: none;
+    padding: 15px;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+}
+
+/* For small screens - mobile view */
+@media (max-width: 768px) {
+  .page-container {
+    width: 80%;
+    margin: 0 auto;
+    padding: 10px;
+  }
+  
+  .form-container {
+    width: 90%;
+  }
+  
+  .header {
+    font-size: 2rem;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 930px) {
+  .page-container {
+    width: 80%;
+    margin: 0 auto; /* This centers the container horizontally */
+    padding: 10px;
+  }
+
+  .form-container {
+    width: 90%;
+  }
+
+  .header {
+    font-size: 2rem;
+  }
+}
+</style>

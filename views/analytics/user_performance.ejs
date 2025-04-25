@@ -1,0 +1,39 @@
+<div class="user-performance container mt-4">
+    <!-- Section Header -->
+    <h2 class="mb-4" style="margin-left: -15px;">User Performance Metrics</h2>
+    
+    <div class="table-responsive" style="margin-left: -15px;">
+        <!-- Table displaying user performance metrics -->
+        <table class="table table-striped table-bordered rounded">
+            <thead style="background-color: #007bff; color: white;">
+                <tr>
+                    <!-- Table column headers -->
+                    <th scope="col">User</th>
+                    <th scope="col">Tasks Created</th>
+                    <th scope="col">Tasks Completed</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Check if user analytics data is available -->
+                <% if (userAnalytics && userAnalytics.length > 0) { %>
+                    <!-- Loop through each user's analytics data -->
+                    <% userAnalytics.forEach(user => { %>
+                        <tr>
+                            <!-- Display the username -->
+                            <td><%= user.user.username %></td>
+                            <!-- Display the number of tasks created by the user -->
+                            <td><%= user.tasksCreated %></td>
+                            <!-- Display the number of tasks completed by the user -->
+                            <td><%= user.tasksCompleted %></td>
+                        </tr>
+                    <% }); %>
+                <% } else { %>
+                    <!-- Display a message if no user performance data is available -->
+                    <tr>
+                        <td colspan="3" class="text-center text-danger">No user performance data available.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</div>

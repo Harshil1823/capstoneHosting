@@ -1,0 +1,174 @@
+<nav class="navbar">
+    <div class="container">
+        <!-- Brand/Logo -->
+        <a href="<%= currentUser ? '/tasks' : '/' %>" class="brand-title d-flex align-items-center text-decoration-none">
+            <img src="/images/logo.png" alt="Task Manager Logo" class="logo-img">
+            <span>Task Manager</span>
+        </a>
+
+        <!-- Custom Hamburger Menu -->
+        <a href="#" class="toggle-button">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </a>
+
+        <!-- Nav Items -->
+        <div class="navbar-links">
+            <ul>
+                <% if (currentUser) { %>
+                    <li><a href="/notifications">Notifications</a></li>
+                    <li><a href="/tasks/new">New Task</a></li>
+                <% } else { %>
+                    <li><a href="/login">Login</a></li>
+                    <li><a href="/register">Sign Up</a></li>
+                <% } %>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- JavaScript for Toggle Button -->
+<script>
+    const toggleButton = document.querySelector('.toggle-button');
+    const navbarLinks = document.querySelector('.navbar-links');
+
+    toggleButton.addEventListener('click', () => {
+        navbarLinks.classList.toggle('active');
+    });
+</script>
+
+<!-- CSS -->
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        padding-top: 70px;
+        background-color: #f6f5f5;
+    }
+
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color: #110777; /* Your desired color */
+        color: white;
+        padding: 0.5rem 1rem;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+    }
+
+    .brand-title {
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+        color: white;
+        text-decoration: none;
+    }
+
+    .logo-img {
+        height: 40px;
+        margin-right: 12px;
+    }
+
+    .navbar-links {
+        margin-top: 0.5rem;
+        display: flex;
+    }
+
+    .navbar-links ul {
+        display: flex;
+        list-style: none;
+    }
+
+    .navbar-links li {
+        padding: 0.1rem 0.1rem;
+        padding-bottom: 0rem;
+    }
+
+    .navbar-links li a {
+        text-decoration: none;
+        color: white;
+        font-size: 1.1rem;
+        padding: 0.1rem 0.5rem;
+        transition: background 0.3s;
+    }
+
+    .navbar-links li a:hover {
+        background-color: #555;
+    }
+
+    /* Custom Hamburger Menu */
+    .toggle-button {
+        display: none;
+        flex-direction: column;
+        justify-content: space-between;
+        width: 30px;
+        height: 21px;
+        cursor: pointer;
+    }
+
+    .toggle-button .bar {
+        height: 3px;
+        width: 100%;
+        background-color: white;
+        border-radius: 10px;
+    }
+
+    /* Mobile Styles */
+    @media (max-width: 800px) {
+        .navbar {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .toggle-button {
+            display: flex;
+        }
+
+        .navbar-links {
+            display: none;
+            width: 100%;
+        }
+
+        .navbar-links ul {
+            width: 100%;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .navbar-links ul li {
+            width: 100%;
+            text-align: center;
+        }
+
+        .navbar-links ul li a {
+            width: 100%;
+            padding: 0.75rem;
+            display: block;
+        }
+        .navbar-links ul li a:last-child {
+            margin-bottom: 0; /* Remove margin for the last item */
+        }
+        .navbar-links.active {
+            display: flex;
+        }
+        
+    }
+
+    @media (min-width: 1400px) {
+    /* Make the container fluid */
+    .container {
+        width: 100%s;
+        max-width: none;
+        padding: 0 3rem; /* Adjust as needed */
+    }
+}
+</style>

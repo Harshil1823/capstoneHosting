@@ -1,0 +1,89 @@
+<% layout('layouts/boilerplate') %>
+
+<div style="display: flex; justify-content: space-between; min-height: 100vh; background-color: #f9f9f9; padding: 20px;">
+  <!-- Left Sidebar -->
+  <%- include('../partials/user_panel') %>
+  
+  <!-- Main Content -->
+  <div style="flex-grow: 1; max-width: 800px; width: 100%; background: #fff; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); border-radius: 10px; padding: 20px; margin: 0 auto;">
+    <% if (currentUser) { %>
+      <h1 style="text-align: center; color: #1a1464; margin-bottom: 20px;"><%= task.title %></h1>
+      <hr style="border-top: 1px solid #ddd; margin-bottom: 20px;">
+      
+      <!-- Task Details -->
+      <div style="font-size: 16px; color: #333;">
+        <p><strong>Description:</strong> <%= task.description %></p>
+        <p><strong>Due Date:</strong> <%= task.dueDate ? new Date(task.dueDate).toLocaleDateString() : "Not specified" %></p>
+        <p><strong>Location:</strong> <%= task.location %></p>
+        <p><strong>Department:</strong> <%= task.department ? task.department.name : "No department assigned" %></p>
+      </div>
+      
+      <!-- Task Images -->
+      <% if (task.images && task.images.length > 0) { %>
+        <h4 style="margin-top: 20px; color: #1a1464;">Task Images:</h4>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;">
+          <% task.images.forEach(image => { %>
+            <img src="<%= image.url %>" alt="Task Image" style="max-width: 100%; height: auto; border-radius: 5px;">
+          <% }); %>
+        </div>
+      <% } else { %>
+        <p style="color: #888; font-style: italic;">No images provided for this task.</p>
+      <% } %>
+      
+      <!-- Comments Section -->
+      <h3>Comments</h3>
+      <% if (comments.length === 0) { %>
+        <p>No comments yet. Be the first to comment!</p>
+      <% } else { %>
+        <ul class="list-group">
+          <% comments.forEach(comment => { %>
+            <li class="list-group-item">
+              <strong><%= comment.author.username %>:</strong>
+              <p><%= comment.content %></p>
+              <small class="text-muted"><%= comment.createdAt.toLocaleString() %></small>
+            </li>
+          <% }); %>
+        </ul>
+      <% } %>
+
+      <!-- Comment Form -->
+      <form action="/tasks/<%= task._id %>/comments" method="POST" class="mt-3">
+        <div class="mb-3">
+          <textarea name="content" class="form-control" placeholder="Add your comment here" required></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Comment</button>
+      </form>
+      
+      <!-- Action Buttons -->
+      <div style="display: flex; justify-content: flex-start; gap: 15px; margin-top: 20px;">
+        <% if (currentUser && ((task.author && currentUser._id.toString() === task.author._id.toString()) || 
+                              currentUser.role === 'Manager' || 
+                              currentUser.role === 'Admin')) { %>
+          <a href="/tasks/<%= task._id %>/edit" style="text-decoration: none; padding: 10px 20px; background: #007bff; color: #fff; border-radius: 5px;">Edit</a>
+          <form action="/tasks/<%= task._id %>?_method=DELETE" method="post" style="display: inline;">
+            <button type="submit" style="padding: 10px 20px; background: #dc3545; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Delete</button>
+          </form>
+        <% } %>
+        
+        <a href="/tasks" style="text-decoration: none; padding: 10px 20px; background: #6c757d; color: #fff; border-radius: 5px;">Back</a>
+        
+        <% if (currentUser && ((task.author && currentUser._id.toString() === task.author._id.toString()) || 
+                              (task.assignedTo && currentUser._id.toString() === task.assignedTo._id.toString()) ||
+                              currentUser.role === 'Manager' || 
+                              currentUser.role === 'Admin')) { %>
+          <form action="/tasks/<%= task._id %>/complete" method="POST" style="display: inline;">
+            <% if (!task.completed) { %>
+              <button type="submit" style="padding: 10px 20px; background: #28a745; color: #fff; border: none; border-radius: 5px; cursor: pointer;">Mark as Complete</button>
+            <% } else { %>
+              <span style="color: #28a745; font-weight: bold;">Task Completed</span>
+            <% } %>
+          </form>
+        <% } %>
+        
+        <% if (currentUser && (currentUser.role === 'Manager' || currentUser.role === 'Admin')) { %>
+          <a href="/tasks/<%= task._id %>/history" class="btn btn-info">History</a>
+        <% } %>
+      </div>
+    <% } %>
+  </div>
+</div>

@@ -1,0 +1,217 @@
+<% layout('layouts/boilerplate') %>
+
+<div class="left-side-page-bar">
+  <%- include('../partials/user_panel') %>
+</div>
+
+<div class="main-content">
+  <!-- Status message container -->
+  <div id="status-message" class="status-message"></div>
+  
+  <div class="notifications-container">
+    <h2>Your Notifications</h2>
+    <% if (notifications.length === 0) { %>
+      <p class="text-muted">No notifications to display.</p>
+    <% } else { %>
+      <ul class="list-group">
+        <% notifications.forEach(notification => { %>
+          <li class="list-group-item d-flex justify-content-between align-items-center <%= !notification.read ? 'unread' : '' %>">
+            <div>
+              <%= notification.message %>
+              <br>
+              <small class="text-muted"><%= new Date(notification.createdAt).toLocaleString() %></small>
+            </div>
+            <% if (!notification.read) { %>
+              <button class="btn btn-sm btn-outline-primary mark-read-btn" data-id="<%= notification._id %>">
+                Mark as Read
+              </button>
+            <% } %>
+          </li>
+        <% }); %>
+      </ul>
+      
+      <div class="actions-container">
+        <form action="/notifications/clear?_method=DELETE" method="POST">
+          <button type="submit" class="btn btn-danger">Clear All Notifications</button>
+        </form>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<script>
+  // Sidebar toggle functionality
+  const sidebarToggle = document.querySelector('.sidebar-toggle');
+  if (sidebarToggle) {
+    sidebarToggle.addEventListener('click', function() {
+      document.querySelector('.left-side-page-bar').classList.toggle('active');
+    });
+  }
+
+  // Show status message
+  function showStatusMessage(message, type = 'success') {
+    const statusMessage = document.getElementById('status-message');
+    statusMessage.textContent = message;
+    statusMessage.className = `status-message ${type}`;
+    statusMessage.style.opacity = '1';
+    
+    // Auto-hide after 3 seconds
+    setTimeout(() => {
+      statusMessage.style.opacity = '0';
+    }, 3000);
+  }
+
+  // Mark notifications as read
+  document.querySelectorAll('.mark-read-btn').forEach(button => {
+    button.addEventListener('click', () => {
+      const notificationId = button.getAttribute('data-id');
+      const listItem = button.closest('.list-group-item');
+      
+      fetch(`/notifications/${notificationId}/read`, { method: 'PUT' })
+        .then(res => res.json())
+        .then(data => {
+          showStatusMessage(data.message);
+          
+          // Update UI without reloading
+          listItem.classList.remove('unread');
+          button.remove();
+        })
+        .catch(err => {
+          console.error(err);
+          showStatusMessage('Failed to mark notification as read', 'error');
+        });
+    });
+  });
+  
+  // Confirm before clearing all notifications
+  document.querySelector('form').addEventListener('submit', function(e) {
+    if (!confirm('Are you sure you want to clear all notifications?')) {
+      e.preventDefault();
+    }
+  });
+</script>
+
+<style>
+  /* Ensuring the main content doesn't overlap with the sidebar */
+  .main-content {
+    margin-left: 260px; /* Adjust based on the sidebar width */
+    padding: 2rem;
+    transition: margin 0.3s ease;
+  }
+
+  /* Status message styling */
+  .status-message {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px 15px;
+    background-color: #4CAF50;
+    color: white;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 1200;
+  }
+  
+  .status-message.error {
+    background-color: #dc3545;
+  }
+  
+  /* Notification styling */
+  .notifications-container {
+    max-width: none;
+    margin: auto;
+    background: #fff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  }
+
+  .list-group-item {
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 10px;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+  }
+  
+  .list-group-item.unread {
+    border-left: 3px solid #007bff;
+    background-color: #f0f7ff;
+  }
+
+  .list-group-item:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  }
+
+  .mark-read-btn {
+    font-size: 0.9rem;
+    padding: 5px 10px;
+  }
+  
+  .actions-container {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .btn-danger {
+    background: #dc3545;
+    border: none;
+    transition: background 0.3s ease;
+  }
+
+  .btn-danger:hover {
+    background: #c82333;
+  }
+  
+  /* Improved responsive design */
+  @media (max-width: 768px) {
+    .left-side-page-bar {
+      position: fixed;
+      top: 0;
+      height: 100%;
+      width: 250px;
+      left: -260px; /* Hide sidebar */
+      transition: left 0.3s ease-in-out;
+      z-index: 1000;
+      background-color: white;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    }
+    
+    .left-side-page-bar.active {
+      left: 0;
+    }
+    
+    .main-content {
+      margin-left: 0;
+      padding: 1rem;
+    }
+
+    /* Floating button to toggle sidebar */
+    .sidebar-toggle {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      background: #1687A7;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      z-index: 1100;
+      cursor: pointer;
+    }
+    
+    .notifications-container {
+      padding: 1rem;
+    }
+    
+    .list-group-item {
+      padding: 10px;
+    }
+  }
+</style>

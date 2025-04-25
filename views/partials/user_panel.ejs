@@ -1,0 +1,237 @@
+<!-- Add this inside the main container, preferably in the navbar -->
+<button id="menu-toggle" class="menu-btn">
+  <i class="fas fa-bars"></i> <!-- Hamburger icon -->
+</button>
+<div class="left-side-page-bar">
+  <div class="user-info">
+      <a href="/profile" class="profile-link">
+          <% if (currentUser && currentUser.profileImage && currentUser.profileImage.url) { %>
+              <img src="<%= currentUser.profileImage.url %>" alt="Profile Picture" class="profile-img">
+          <% } else { %>
+              <div class="default-profile-img">
+                  <i class="fas fa-user-circle"></i>
+              </div>
+          <% } %>
+          <h4><%= currentUser ? currentUser.username : 'User' %></h4>
+      </a>
+  </div>
+  <ul>
+      <li><a href="/analytics/dashboard"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+      <li><a href="/tasks"><i class="fas fa-tasks"></i> Tasks</a></li>
+      <li><a href="/schedules"><i class="fas fa-calendar-alt"></i> Schedules</a></li>
+      <li>
+        <a href="/messages/inbox">
+          <i class="fas fa-envelope"></i> Messages
+          <% if (locals.unreadMessageCount && unreadMessageCount > 0) { %>
+            <span id="message-badge" class="badge bg-danger rounded-pill"><%= unreadMessageCount %></span>
+          <% } %>
+        </a>
+      </li>      
+      <!-- <li><a href="/settings"><i class="fas fa-cog"></i> Settings</a></li> -->
+      <% if (currentUser.role === "Admin" || currentUser.role === "Manager") { %>
+        <li><a href="/requests/new"><i class="fas fa-ticket-alt"></i> Submit Request</a></li>
+      <% } %>
+      <% if (currentUser.role === "Admin") { %>
+        <li><a href="/admin/users"><i class="fas fa-users-cog"></i> User Management</a></li>
+      <% } %>
+      <li><a href="/logout"><i class="fa fa-external-link-square"></i> Logout</a>
+  </ul>
+</div>
+
+<!-- Overlay -->
+<div id="overlay" class="overlay"></div>
+
+
+<script>
+  const menuToggle = document.getElementById("menu-toggle");
+  const sidebar = document.querySelector(".left-side-page-bar");
+  const overlay = document.getElementById("overlay");
+
+  menuToggle.addEventListener("click", function() {
+    sidebar.classList.toggle("active");
+    overlay.classList.toggle("active");
+  });
+
+  // Hide sidebar when clicking the overlay
+  overlay.addEventListener("click", function() {
+    sidebar.classList.remove("active");
+    overlay.classList.remove("active");
+  });
+</script>
+
+<!-- CSS Styling -->
+<style>
+  /* Container for the user panel */
+  .left-side-page-bar {
+    background-color: #fff;
+    border-right: 1px solid #ddd;
+    min-height: 100vh;
+    padding: 1.5rem;
+    width: 250px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    left: 0;
+    transition: transform 0.3s ease;
+  }
+
+  /* User Info Styling */
+  .left-side-page-bar .user-info {
+    text-align: center;
+    margin-top: 5rem;
+  }
+  
+  .left-side-page-bar .user-info i {
+    font-size: 4rem;
+    color: #110777;
+  }
+
+  /* Profile link styling */
+  .profile-link {
+    display: block;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.2s ease;
+  }
+
+  .profile-link:hover {
+    transform: scale(1.05);
+  }
+
+  /* Profile image styling */
+  .profile-img {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #110777;
+    display: block;
+    margin: 0 auto;
+  }
+  
+  .default-profile-img {
+    width: 4rem;
+    height: 4rem;
+    border-radius: 50%;
+    background-color: #eaecef;
+    border: 2px solid #110777;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+  }
+  
+  .default-profile-img i {
+    font-size: 2.5rem;
+    color: #110777;
+  }
+  
+  .left-side-page-bar .user-info h4 {
+    margin-top: 0.5rem;
+    font-size: 1.25rem;
+    color: #333;
+  }
+
+  /* Navigation List Styling */
+  .left-side-page-bar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .left-side-page-bar ul li {
+    margin-bottom: 0.25rem;
+  }
+  
+  .left-side-page-bar ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+    display: block;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .left-side-page-bar ul li a:hover {
+    background-color: #f4f4f4;
+  }
+  
+  .left-side-page-bar ul li a i {
+    margin-right: 0.5rem;
+    color: #110777;
+  }
+
+  /* Overlay Styling */
+  .overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease;
+    z-index: 998;
+  }
+
+  .overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+
+/* Hide Sidebar by Default on Small Screens */
+@media (max-width: 930px) {
+  .left-side-page-bar {
+    transform: translateX(-100%);
+  }
+  
+  /* Menu Button */
+  .menu-btn {
+    display: block;
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    background: #1687A7;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    border-radius: 5px;
+    border-radius: 5px;
+    z-index: 999; /* Ensure the button is above the overlay */
+  }
+
+  /* When Sidebar is Open */
+  .left-side-page-bar.active {
+    transform: translateX(0);
+  }
+}
+/* Menu Button Default (Hidden on Large Screens) */
+.menu-btn {
+  display: none;
+}
+/* Message badge styling */
+#message-badge {
+  background-color: #dc3545;
+  color: white;
+  font-size: 0.7rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 50%;
+  position: relative;
+  margin-left: 5px;
+}
+
+/* Animation for new messages */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.badge-pulse {
+  animation: pulse 1s infinite;
+}
+</style>

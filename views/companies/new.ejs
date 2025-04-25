@@ -1,0 +1,124 @@
+<% layout('layouts/boilerplate') %>
+<!-- Specify the layout template to use -->
+
+<h1>Create a New Company</h1>
+<!-- Page header -->
+
+<form action="/companies" method="POST" class="needs-validation" novalidate>
+  <!-- Form for creating a new company -->
+  
+  <div class="form-group">
+    <!-- Input field for the company name -->
+    <label for="name" class="form-label">Company Name</label>
+    <input type="text" id="name" name="name" class="form-control" required>
+    <div class="invalid-feedback">Please provide a company name.</div>
+    <!-- Validation message for the company name -->
+  </div>
+  
+  <div class="form-group">
+    <!-- Input field for the street address -->
+    <label for="street" class="form-label">Street</label>
+    <input type="text" id="street" name="street" class="form-control" required>
+    <div class="invalid-feedback">Please provide a street address.</div>
+    <!-- Validation message for the street address -->
+  </div>
+  
+  <div class="form-group">
+    <!-- Input field for the city -->
+    <label for="city" class="form-label">City</label>
+    <input type="text" id="city" name="city" class="form-control" required>
+    <div class="invalid-feedback">Please provide a city.</div>
+    <!-- Validation message for the city -->
+  </div>
+  
+  <div class="form-group">
+    <!-- Input field for the state -->
+    <label for="state" class="form-label">State</label>
+    <input type="text" id="state" name="state" class="form-control" required>
+    <div class="invalid-feedback">Please provide a state.</div>
+    <!-- Validation message for the state -->
+  </div>
+  
+  <div class="form-group">
+    <!-- Input field for the zip code -->
+    <label for="zipCode" class="form-label">Zip Code</label>
+    <input type="text" id="zipCode" name="zipCode" class="form-control" required>
+    <div class="invalid-feedback">Please provide a zip code.</div>
+    <!-- Validation message for the zip code -->
+  </div>
+  
+  <button type="submit" class="btn btn-primary mt-3">Create Company</button>
+  <!-- Submit button for the form -->
+</form>
+
+<!-- CSS Styling -->
+<style>
+  /* Global Styles */
+  body {
+    background-color: #f4f4f9;
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+  
+  h1 {
+    text-align: center;
+    color: #110777;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+  }
+  
+  /* Form Container */
+  form {
+    max-width: 500px;
+    margin: 0 auto;
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .form-group {
+    margin-bottom: 1.5rem;
+  }
+  
+  .form-label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    color: #333333;
+  }
+  
+  .form-control {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  .form-control:focus {
+    outline: none;
+    border-color: #110777;
+    box-shadow: 0 0 5px rgba(17, 7, 119, 0.3);
+  }
+  
+  .invalid-feedback {
+    color: #d9534f;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+  }
+  
+  .btn-primary {
+    background-color: #110777;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-primary:hover {
+    background-color: #0d064f;
+  }
+</style>

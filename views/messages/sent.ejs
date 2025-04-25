@@ -1,0 +1,91 @@
+<% layout('layouts/boilerplate') %>
+<!-- Specify the layout template to use -->
+
+<%- include('../partials/user_panel') %>
+<!-- Include the user panel partial -->
+
+<link rel="stylesheet" href="/css/messages.css">
+<!-- Link to the CSS file for styling messages -->
+
+<div class="container mt-4" style="margin-left: 250px; width: calc(100% - 250px); max-width: calc(100% - 250px);">
+    <h1>Messages</h1>
+    <!-- Page header -->
+
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <!-- Navigation pills for Inbox and Sent messages -->
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a class="nav-link" href="/messages/inbox">Inbox</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" href="/messages/sent">Sent</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-4 text-end">
+            <!-- Button to compose a new message -->
+            <a href="/messages/new" class="btn btn-primary">New Message</a>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <!-- Search bar for filtering messages -->
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Search messages..." id="messageSearch">
+                <button class="btn btn-outline-secondary" type="button">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="list-group">
+                <% if (messages.length === 0) { %>
+                    <!-- Display a message if no sent messages are available -->
+                    <div class="list-group-item">
+                        <p class="text-muted">You haven't sent any messages yet.</p>
+                    </div>
+                <% } %>
+                
+                <% messages.forEach(msg => { %>
+                    <!-- Display each sent message as a list item -->
+                    <a href="/messages/<%= msg._id %>" class="list-group-item list-group-item-action">
+                        <div class="d-flex w-100 justify-content-between">
+                            <div class="d-flex align-items-center">
+                                <!-- Display the recipient's avatar -->
+                                <div class="avatar me-3">
+                                    <div class="rounded-circle bg-secondary text-white text-center" style="width: 40px; height: 40px; line-height: 40px;">
+                                        <!-- Display recipient's initials or username -->
+                                        <%= msg.recipient.firstName ? msg.recipient.firstName.charAt(0) + msg.recipient.lastName.charAt(0) : msg.recipient.username.substring(0, 2).toUpperCase() %>
+                                    </div>
+                                </div>
+                                <div style="max-width: calc(100% - 60px); overflow-wrap: break-word;">
+                                    <!-- Display recipient's name and message subject -->
+                                    <h5 class="mb-1 text-truncate">
+                                        To: <%= msg.recipient.firstName ? `${msg.recipient.firstName} ${msg.recipient.lastName}` : msg.recipient.username %>
+                                        <span class="text-muted small"><%= msg.subject %></span>
+                                    </h5>
+                                    <!-- Display a truncated preview of the message content -->
+                                    <p class="mb-1 text-truncate" style="max-width: 100%;">
+                                        <%= msg.content %>
+                                    </p>
+                                </div>
+                            </div>
+                            <!-- Display the message timestamp -->
+                            <small class="text-muted ms-2">
+                                <%= new Date(msg.createdAt).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) %>
+                            </small>
+                        </div>
+                    </a>
+                <% }) %>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Include the message search JavaScript -->
+<script src="/javascripts/messageSearch.js"></script>

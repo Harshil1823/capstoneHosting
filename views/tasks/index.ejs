@@ -1,0 +1,48 @@
+<% layout('layouts/boilerplate') %>
+
+<link rel="stylesheet" href="/css/task.css">
+<div class="container-fluid">
+  <div class="row g-0">
+    <% if (currentUser) { %>
+      <div class="col-md-3 col-lg-2">  <!-- Narrower side columns -->
+          <%- include('../partials/user_panel') %>
+      </div>
+    <div class="col-md-6 col-lg-9 ps-lg-5 pe-lg-4">  
+      <div class="sub-nav mb-4">
+        <a href="/tasks" class="sub-nav-btn <%= currentPage === 'tasks' ? 'active' : '' %>">Tasks</a>
+        <a href="/tasks/completed" class="sub-nav-btn <%= currentPage === 'completed' ? 'active' : '' %>">Completed Tasks</a>
+        <a href="/tasks/assigned" class="sub-nav-btn <%= currentPage === 'assigned' ? 'active' : '' %>">Tasks Assigned to You</a>
+      
+        <% if (currentUser.role === 'Admin' || currentUser.role === 'Manager') { %>
+          <a href="/tasks/overdue" class="sub-nav-btn <%= currentPage === 'overdue' ? 'active' : '' %>">Overdue Tasks</a>
+        <% } %>
+      </div>
+
+      <% if (tasks.length === 0) { %>
+        <p>No tasks available</p>
+      <% } else { %>
+        <div class="task-grid">
+          <% tasks.forEach(task => { %>
+
+            <a href="/tasks/<%= task._id %>" class="task-card">
+              <div class="card-header">
+                <span>Due: <%= task.dueDate.toLocaleDateString() %></span>
+                <span>Assigned To: <%= task.assignedTo ? task.assignedTo.username : "Unassigned" %></span>
+              </div>
+              <div class="priority-label priority-<%= task.importance.toLowerCase() %>">
+                <%= task.importance %>
+              </div>
+              <h3><%= task.title %></h3>
+              <p class="task-preview"><%= task.description.substring(0, 100) %>...</p>
+            </a>
+          <% }) %>
+        </div>
+      <% } %>
+      
+      <a href="/tasks/new">
+        <button>Add Task</button>
+      </a>
+    </div>
+    <% } %>
+  </div>
+</div>

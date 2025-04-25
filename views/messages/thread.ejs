@@ -1,0 +1,99 @@
+<% layout('layouts/boilerplate') %>
+<!-- Specify the layout template to use -->
+
+<%- include('../partials/user_panel') %>
+<!-- Include the user panel partial -->
+
+<link rel="stylesheet" href="/css/messages.css">
+<!-- Link to the CSS file for styling messages -->
+
+<div class="container mt-4" style="margin-left: 250px; width: calc(100% - 250px); max-width: calc(100% - 250px);">
+    <div class="row mb-3">
+        <div class="col-md-8">
+            <h1>
+                <% if (messages.length > 0) { %>
+                    <!-- Display the subject of the first message in the thread -->
+                    <%= messages[0].subject %>
+                <% } else { %>
+                    <!-- Fallback title if no messages are available -->
+                    Conversation
+                <% } %>
+            </h1>
+        </div>
+        <div class="col-md-4 text-end">
+            <!-- Button to navigate back to the inbox -->
+            <a href="/messages/inbox" class="btn btn-secondary">Back to Inbox</a>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-body">
+                    <div class="message-thread" style="max-height: 60vh; overflow-y: auto; padding-right: 10px;">
+                        <% if (messages.length === 0) { %>
+                            <!-- Display a message if the thread is empty -->
+                            <p class="text-muted">No messages in this conversation.</p>
+                        <% } %>
+                        
+                        <% messages.forEach((message, index) => { %>
+                            <!-- Display each message in the thread -->
+                            <div class="message <%= message.sender._id.equals(currentUser._id) ? 'sender' : 'recipient' %> mb-4">
+                                <div class="d-flex">
+                                    <div class="avatar me-3">
+                                        <!-- Display the sender's avatar -->
+                                        <div class="rounded-circle <%= message.sender._id.equals(currentUser._id) ? 'bg-primary' : 'bg-secondary' %> text-white text-center" style="width: 40px; height: 40px; line-height: 40px;">
+                                            <!-- Display sender's initials or username -->
+                                            <%= message.sender.firstName ? message.sender.firstName.charAt(0) + message.sender.lastName.charAt(0) : message.sender.username.substring(0, 2).toUpperCase() %>
+                                        </div>
+                                    </div>
+                                    <div class="message-content" style="flex: 1; max-width: calc(100% - 60px); overflow-wrap: break-word;">
+                                        <div class="d-flex justify-content-between">
+                                            <!-- Display the sender's name -->
+                                            <h5 class="mb-1">
+                                                <%= message.sender.firstName ? `${message.sender.firstName} ${message.sender.lastName}` : message.sender.username %>
+                                            </h5>
+                                            <!-- Display the message timestamp -->
+                                            <small class="text-muted">
+                                                <%= new Date(message.createdAt).toLocaleString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) %>
+                                            </small>
+                                        </div>
+                                        <!-- Display the message content -->
+                                        <div class="message-body p-3 rounded" style="background-color: <%= message.sender._id.equals(currentUser._id) ? '#e6f7ff' : '#f5f5f5' %>; border-radius: 8px; word-break: break-word;">
+                                            <p style="white-space: pre-line;"><%= message.content %></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <% }); %>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Reply</h5>
+                    <!-- Form for replying to the thread -->
+                    <form action="/messages" method="POST">
+                        <!-- Hidden input to include the thread ID -->
+                        <input type="hidden" name="replyToThread" value="<%= threadId %>">
+                        <!-- Hidden input to include the recipient's ID -->
+                        <input type="hidden" name="recipient" value="<%= otherParticipant ? otherParticipant._id : '' %>">
+                        <!-- Hidden input to include the subject of the reply -->
+                        <input type="hidden" name="subject" value="<%= messages.length > 0 ? `Re: ${messages[0].subject}` : 'Reply' %>">
+                        
+                        <div class="mb-3">
+                            <!-- Textarea for the reply content -->
+                            <textarea class="form-control" id="content" name="content" rows="4" required></textarea>
+                        </div>
+                        
+                        <div class="text-end">
+                            <!-- Button to submit the reply -->
+                            <button type="submit" class="btn btn-primary">Send Reply</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,87 @@
+<% layout('layouts/boilerplate') %>
+<!-- Specify the layout template to use -->
+
+<h1>Company Details</h1>
+<!-- Page header -->
+
+<div class="company-details">
+  <!-- Display the company name -->
+  <p><strong>Company Name:</strong> <%= company.name %></p>
+  
+  <!-- Display the company address -->
+  <p>
+    <strong>Address:</strong> 
+    <%= company.address.street %>, <%= company.address.city %>, 
+    <%= company.address.state %> <%= company.address.zipCode %>
+  </p>
+  
+  <!-- Display the company code with a hover effect -->
+  <p>
+    <strong>Company Code:</strong> 
+    <span class="company-code">
+      <!-- Placeholder for the company code -->
+      <span class="placeholder">******</span>
+      <!-- Actual company code, hidden by default -->
+      <span class="real-code"><%= company.code %></span>
+    </span>
+  </p>
+  
+  <!-- Display the store number -->
+  <p><strong>Store Number:</strong> <%= company.storeNumber %></p>
+</div>
+
+<!-- CSS Styling -->
+<style>
+  /* Global Styles */
+  body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+  }
+
+  h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+    color: #110777;
+  }
+
+  /* Container for company details */
+  .company-details {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+
+  .company-details p {
+    margin-bottom: 1rem;
+    line-height: 1.5;
+  }
+
+  .company-details strong {
+    color: #110777;
+  }
+
+  /* Company Code Hover Effect */
+  .company-code {
+    position: relative;
+    cursor: pointer;
+  }
+
+  /* Initially show placeholder and hide real code */
+  .company-code .real-code {
+    display: none;
+  }
+
+  /* On hover, swap the display */
+  .company-code:hover .real-code {
+    display: inline;
+  }
+
+  .company-code:hover .placeholder {
+    display: none;
+  }
+</style>

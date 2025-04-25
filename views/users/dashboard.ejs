@@ -1,0 +1,56 @@
+<% layout('layouts/boilerplate') %>
+
+<!-- Link to the dashboard CSS file -->
+<link rel="stylesheet" href="/css/dashboard.css">
+<div class="container-fluid" style="padding-top: 40px;"> <!-- Increased padding-top here -->
+  <div class="row">
+    <% if (currentUser) { %>
+      <!-- User Panel Section -->
+     
+       <!-- Include the user panel partial -->
+       <%- include('../partials/user_panel') %>
+
+      <!-- Analytics Section -->
+      <div class="col-md-9 analytics-section">
+        <div class="analytics-dropdown" style="margin-left: 50px; margin-top: 20px; width: 250px;"> <!-- Added width to maintain size -->
+          <select id="analytics-view-selector" class="form-select" style="width: 100%;"> <!-- Ensures dropdown fills the container -->
+            <option value="company-overview">Company Overview</option>
+            <option value="department-stats">Department Stats</option>
+            <option value="task-priority">Task Priority</option>
+            <option value="user-performance">User Performance</option>
+          </select>
+        </div>
+
+        <div class="analytics-sections">
+          <div id="company-overview" class="analytics-view">
+            <%- include('../analytics/company_overview.ejs', { analytics }) %>
+          </div>
+          <div id="department-stats" class="analytics-view" style="display: none;">
+            <%- include('../analytics/department_stats.ejs', { departmentAnalytics: analytics.departmentStats || [] }) %>
+          </div>
+          <div id="task-priority" class="analytics-view" style="display: none;">
+            <%- include('../analytics/task_priority.ejs', { priorityAnalytics: analytics.priorityStats || [] }) %>
+          </div>
+          <div id="user-performance" class="analytics-view" style="display: none;">
+            <%- include('../analytics/user_performance.ejs', { userAnalytics: analytics.userStats || [] }) %>
+          </div>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</div>
+
+<script>
+  // JavaScript to handle dropdown menu changes
+  document.getElementById('analytics-view-selector').addEventListener('change', function () {
+    const selectedView = this.value;
+
+    // Hide all analytics views
+    document.querySelectorAll('.analytics-view').forEach(view => {
+      view.style.display = 'none';
+    });
+
+    // Show the selected view
+    document.getElementById(selectedView).style.display = 'block';
+  });
+</script>

@@ -1,0 +1,73 @@
+<!-- Use the boilerplate layout for consistent styling and structure -->
+<% layout('layouts/boilerplate') %>
+
+<!-- Link to the schedule-specific CSS file -->
+<link rel="stylesheet" href="/css/schedule.css">
+
+<div class="container-fluid">
+  <div class="row">
+    <% if (currentUser) { %> <!-- Check if a user is logged in -->
+    <div class="col-md-3">
+      <!-- Include the user panel for logged-in users -->
+      <%- include('../partials/user_panel') %>
+    </div>
+    <div class="col-md-6">
+      <div id="calendar">
+        <!-- Calendar header with navigation buttons and view toggle -->
+        <div class="d-flex justify-content-between align-items-center calendar-header">
+          <div class="month-navigation-box">
+            <!-- Buttons to navigate between months -->
+            <button id="prevMonth" class="btn btn-secondary btn-sm">&lt;</button>
+            <span id="monthYear"></span> <!-- Placeholder for the current month and year -->
+            <button id="nextMonth" class="btn btn-secondary btn-sm">&gt;</button>
+          </div>
+          <div class="view-toggle">
+            <!-- Buttons for Month View and Week View -->
+            <button id="weekViewButton" class="btn btn-outline-secondary active">Week</button>
+            <button id="monthViewButton" class="btn btn-outline-secondary">Month</button>
+          </div>
+          <div class="manager-view-toggle">
+            <% if (currentUser.role === 'Admin' || currentUser.role === 'Manager') { %>
+            <!-- Toggle switch for Manager View -->
+            <label class="switch">
+              <input type="checkbox" id="managerViewToggle" checked>
+              <span class="slider round"></span>
+            </label>
+              <span id="managerViewLabel">Manager View</span> <!-- Label for Manager View -->
+            <% } %>
+          </div>
+        </div>
+        <!-- Table structure for displaying the calendar -->
+        <table class="table table-bordered mt-4">
+          <thead>
+            <tr>
+              <!-- Days of the week as table headers -->
+              <th>Sun</th>
+              <th>Mon</th>
+              <th>Tue</th>
+              <th>Wed</th>
+              <th>Thu</th>
+              <th>Fri</th>
+              <th>Sat</th>
+            </tr>
+          </thead>
+          <tbody id="calendarBody">
+            <!-- Calendar days will be dynamically injected here by JavaScript -->
+          </tbody>
+        </table>
+        <% if (currentUser.role === 'Admin' || currentUser.role === 'Manager') { %>
+          <!-- Buttons for Admins or Managers to create, modify, or delete schedules -->
+          <a href="/schedules/new" class="btn btn-primary">Create New Schedule</a>
+          <a href="/schedules/show" class="btn btn-primary">Modify/Delete Schedules</a>
+        <% } %>
+      </div>
+    </div>
+    <% } %>
+  </div>
+</div>
+
+<!-- Embed the schedules data as a JSON script for use in JavaScript -->
+<script> const currentUser = <%- JSON.stringify(currentUser) %>; </script>
+<script id="schedulesData" type="application/json"><%- JSON.stringify(schedules) %></script>
+<!-- Include the JavaScript file responsible for calendar functionality -->
+<script src="/javascripts/managerCalendar.js"></script>

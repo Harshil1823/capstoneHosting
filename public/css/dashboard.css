@@ -1,0 +1,151 @@
+/* General styles */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+/* Dashboard container */
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Summary cards styles */
+.summary-cards {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    margin-top: 20px; /* Added margin-top */
+}
+
+.card {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    flex: 1;
+    margin: 0 10px;
+}
+
+.card:first-child {
+    margin-left: 0;
+}
+
+.card:last-child {
+    margin-right: 0;
+}
+
+/* Analytics sections styles */
+.analytics-sections {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+/* Task priority chart styles */
+.task-priority {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.task-priority h2 {
+    margin-bottom: 20px;
+}
+
+.task-priority canvas {
+    max-width: 100%;
+    height: 400px; /* Set a fixed height for the canvas */
+}
+
+/* Dropdown menu styles */
+.analytics-dropdown .form-select {
+    width: 20%; /* Slightly wider for better visibility */
+    margin: 0 auto;
+    padding: 12px; /* Increased padding for better usability */
+    font-size: 18px; /* Larger font size for readability */
+    border-radius: 5px; /* Rounded corners */
+    background-color: #f8f9fa; /* Light gray background */
+    color: #333; /* Darker text color for contrast */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    transition: all 0.3s ease; /* Smooth transition for hover effects */
+}
+
+.analytics-dropdown .form-select:focus {
+    outline: none; /* Remove default focus outline */
+    border-color: #0056b3; /* Darker blue border on focus */
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Add a glow effect */
+}
+
+.analytics-dropdown .form-select:hover {
+    background-color: #e9ecef; /* Slightly darker background on hover */
+    cursor: pointer; /* Change cursor to pointer */
+}
+
+/* Table styles */
+.table {
+    border-radius: 10px;
+    overflow: hidden; /* Ensures the rounded corners apply properly */
+}
+
+.table-header {
+    background-color: #007bff !important; /* Force the blue background */
+    color: white !important; /* Force white text */
+}
+
+/* General styles for the dashboard */
+.container-fluid {
+    padding: 20px;
+}
+
+.analytics-dropdown {
+    margin-left: 0; /* Reset margin for dropdown */
+}
+
+.analytics-sections {
+    margin-top: 20px;
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+    .row {
+        flex-direction: column; /* Stack user panel and analytics vertically */
+    }
+
+    .col-md-3 {
+        width: 100%; /* Make user panel full width */
+        margin-bottom: 20px; /* Add spacing below user panel */
+    }
+
+    .col-md-9 {
+        width: 100%; /* Make analytics section full width */
+    }
+
+    .analytics-dropdown {
+        margin-left: 0; /* Align dropdown properly */
+        margin-top: 20px; /* Add spacing above dropdown */
+    }
+
+    .analytics-view {
+        padding: 10px; /* Add padding to analytics views */
+    }
+}
+/* Media query for larger screens */
+@media (min-width: 950px) {
+    .row {
+        display: flex;
+        justify-content: center;
+        margin-left: 100px;
+    }
+}

@@ -1,0 +1,188 @@
+<% layout('layouts/boilerplate') %>
+<!-- Specify the layout template to use -->
+
+<%- include('../partials/user_panel') %>
+<!-- Include the user panel partial -->
+
+<div class="page-container">
+  <h1 class="header">Change Requests</h1>
+  <!-- Page header -->
+
+  <% if (requests.length === 0) { %>
+    <!-- Display a message if no change requests are submitted -->
+    <p class="no-requests">No change requests submitted.</p>
+  <% } else { %>
+    <div class="table-container">
+      <!-- Table displaying the list of change requests -->
+      <table class="table">
+        <thead>
+          <tr>
+            <!-- Table column headers -->
+            <th>Title</th>
+            <th>Description</th>
+            <th>Requester</th>
+            <th>Status</th>
+            <th>Submitted At</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% requests.forEach(request => { %>
+            <!-- Loop through each request and display its details -->
+            <tr>
+              <!-- Display the request title -->
+              <td><%= request.title %></td>
+              <!-- Display the request description -->
+              <td><%= request.description %></td>
+              <!-- Display the username of the requester -->
+              <td><%= request.requester.username %></td>
+              <!-- Display the request status with a status-specific class -->
+              <td class="status <%= request.status.toLowerCase() %>">
+                <%= request.status %>
+              </td>
+              <!-- Display the submission timestamp -->
+              <td><%= request.createdAt.toLocaleString() %></td>
+            </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+  <% } %>
+</div>
+
+<style>
+/* Container for the page content */
+.page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: calc(100% - 250px);
+  margin-left: 250px;
+  padding: 20px;
+}
+
+/* Header styling */
+.header {
+  text-align: center;
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+/* Message for no requests */
+.no-requests {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #777;
+  margin-top: 20px;
+}
+
+/* Table container */
+.table-container {
+  width: 100%;
+  max-width: 900px;
+  background: #ffffff;
+  padding: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow-x: auto;
+}
+
+/* Table styling */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.table thead {
+  background: #007bff;
+  color: white;
+}
+
+.table th, .table td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Alternating row colors */
+.table tbody tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+/* Status column styling */
+.status {
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+/* Status color indicators */
+.status.pending { color: #ff9800; }
+.status.approved { color: #28a745; }
+.status.rejected { color: #dc3545; }
+
+/* Responsive adjustments */
+/* Adjustments for medium and small screens */
+@media (max-width: 1100px) {
+  .page-container {
+    width: calc(100% - 250px);
+    margin-left: 250px;
+    padding: 15px;
+  }
+  
+  .table-container {
+    width: 100%;
+    padding: 15px;
+  }
+  
+  .header {
+    font-size: 2.2rem;
+  }
+  
+  .table th, .table td {
+    padding: 10px 8px;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 950px) {
+  .page-container {
+    width: calc(100% - 250px);
+    margin-left: 250px;
+    padding: 10px;
+  }
+  
+  .table-container {
+    width: 100%;
+    padding: 10px;
+    overflow-x: scroll;
+  }
+  
+  .table {
+    min-width: 650px; /* Ensures table doesn't get too compressed */
+  }
+  
+  .header {
+    font-size: 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .page-container {
+    width: 100%;
+    margin-left: 0;
+    padding: 10px;
+  }
+  
+  .table-container {
+    width: 95%;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 930px) {
+  .page-container {
+    width: 80%;
+    margin: 0 auto; /* Center the container horizontally */
+    padding: 10px;
+  }
+}
+</style>

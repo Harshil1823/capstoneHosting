@@ -1,0 +1,467 @@
+<%
+/* 
+  Determine if the file is included from the dashboard. 
+  If `locals.totalTasks` is undefined, it means the file is included from the dashboard.
+*/
+const isIncludedFromDashboard = !locals.totalTasks;
+
+// Initialize variables with data passed from the server
+let totalTasks = locals.totalTasks;
+let pendingTasks = locals.pendingTasks;
+let deletedTasks = locals.deletedTasks;
+let departmentAnalytics = locals.departmentAnalytics;
+let userAnalytics = locals.userAnalytics;
+let priorityAnalytics = locals.priorityAnalytics;
+let departmentChartData = locals.departmentChartData;
+let priorityChartData = locals.priorityChartData;
+
+// If included from the dashboard and analytics data is available, calculate stats
+if (isIncludedFromDashboard && analytics) {
+    // Calculate total tasks based on priority stats
+    totalTasks = (
+        (analytics.priorityStats.highPriority.total || 0) + 
+        (analytics.priorityStats.mediumPriority.total || 0) + 
+        (analytics.priorityStats.lowPriority.total || 0)
+    );
+    
+    // Calculate pending tasks
+    pendingTasks = Math.max(0, 
+        (analytics.dailyStats.tasksCreated || 0) - (analytics.dailyStats.tasksCompleted || 0)
+    );
+    
+    // Get the number of deleted tasks
+    deletedTasks = analytics.dailyStats.tasksDeleted || 0;
+    
+    // Process department analytics if available
+    if (analytics.departmentStats) {
+        departmentAnalytics = analytics.departmentStats.map(dept => {
+            return {
+                department: dept.department,
+                tasksCreated: dept.tasksCreated || 0,
+                tasksCompleted: dept.tasksCompleted || 0,
+                tasksPending: Math.max(0, (dept.tasksCreated || 0) - (dept.tasksCompleted || 0)),
+                completionRate: dept.tasksCreated > 0 
+                    ? ((dept.tasksCompleted / dept.tasksCreated) * 100).toFixed(1) 
+                    : 0
+            };
+        });
+        
+        // Prepare data for the department chart
+        departmentChartData = {
+            labels: departmentAnalytics.map(dept => 
+                dept.department && dept.department.name ? dept.department.name : 'Unknown'
+            ),
+            datasets: [
+                {
+                    label: 'Tasks Completed',
+                    data: departmentAnalytics.map(dept => dept.tasksCompleted),
+                    backgroundColor: 'green'
+                },
+                {
+                    label: 'Tasks Pending',
+                    data: departmentAnalytics.map(dept => dept.tasksPending),
+                    backgroundColor: 'orange'
+                }
+            ]
+        };
+    } else {
+        departmentAnalytics = [];
+        departmentChartData = { labels: [], datasets: [] };
+    }
+    
+    // Process priority analytics if available
+    if (analytics.priorityStats) {
+        priorityAnalytics = {
+            'High Priority': { 
+                total: analytics.priorityStats.highPriority.total || 0,
+                completed: analytics.priorityStats.highPriority.completed || 0
+            },
+            'Medium Priority': { 
+                total: analytics.priorityStats.mediumPriority.total || 0,
+                completed: analytics.priorityStats.mediumPriority.completed || 0
+            },
+            'Low Priority': { 
+                total: analytics.priorityStats.lowPriority.total || 0,
+                completed: analytics.priorityStats.lowPriority.completed || 0
+            }
+        };
+        
+        // Prepare data for the priority chart
+        priorityChartData = {
+            labels: Object.keys(priorityAnalytics),
+            data: Object.values(priorityAnalytics).map(p => p.total)
+        };
+    } else {
+        priorityAnalytics = {};
+        priorityChartData = { labels: [], data: [] };
+    }
+    
+    // Process user analytics if available
+    if (analytics.userStats) {
+        userAnalytics = analytics.userStats.map(user => {
+            return {
+                user: user.user,
+                tasksCreated: user.tasksCreated || 0,
+                tasksCompleted: user.tasksCompleted || 0,
+                tasksAssigned: user.tasksAssigned || 0,
+                completionRate: user.tasksAssigned > 0 
+                    ? ((user.tasksCompleted / user.tasksAssigned) * 100).toFixed(1)
+                    : 0
+            };
+        });
+    } else {
+        userAnalytics = [];
+    }
+}
+
+// If no analytics data is available, initialize variables with default values
+if (!analytics) {
+    totalTasks = 0;
+    pendingTasks = 0;
+    deletedTasks = 0;
+    departmentAnalytics = [];
+    userAnalytics = [];
+    priorityAnalytics = {};
+    departmentChartData = { labels: [], datasets: [] };
+    priorityChartData = { labels: [], data: [] };
+}
+
+// Generate unique IDs for the department and priority charts
+const deptChartId = 'deptChart' + Date.now();
+const priorityChartId = 'priorityChart' + Date.now();
+%>
+
+<% if (!isIncludedFromDashboard) { %>
+<%- include('../partials/header') %>
+<% } %>
+
+<!-- Dashboard CSS -->
+<style>
+    /* Styling for the dashboard container */
+    .dashboard-container {
+        margin-left: -15px;
+        padding-left: 15;
+        padding-right: 15px;
+        width: calc(100% + 15px);
+    }
+    
+    /* Styling for the statistic cards */
+    .stat-card {
+        height: 160px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+    }
+    
+    /* Styling for the chart containers */
+    .chart-container {
+        height: 350px;
+        position: relative;
+        margin-top: 15px;
+    }
+    
+    /* Responsive adjustments for smaller screens */
+    @media (max-width: 768px) {
+        .stat-card {
+            height: 140px;
+            margin-bottom: 15px;
+        }
+        
+        .chart-container {
+            height: 300px;
+        }
+    }
+</style>
+
+<div class="dashboard-container">
+    <!-- Dashboard Header -->
+    <h1 class="dashboard-header">Company Analytics Dashboard</h1>
+    
+    <!-- Summary Cards Row -->
+    <div class="row mb-4 gx-3">
+        <!-- Total Tasks Card -->
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="card shadow-sm h-100">
+                <div class="card-body stat-card">
+                    <h3 class="card-title">Total Tasks</h3>
+                    <p class="display-4"><%= totalTasks %></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Completed Tasks Card -->
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="card bg-success text-white shadow-sm h-100">
+                <div class="card-body stat-card">
+                    <h3 class="card-title">Completed Tasks</h3>
+                    <p class="display-4"><%= analytics && analytics.dailyStats ? analytics.dailyStats.tasksCompleted : 0 %></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pending Tasks Card -->
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="card bg-warning text-dark shadow-sm h-100">
+                <div class="card-body stat-card">
+                    <h3 class="card-title">Pending Tasks</h3>
+                    <p class="display-4"><%= pendingTasks %></p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Deleted Tasks Card -->
+        <div class="col-md-3 col-sm-6 mb-3">
+            <div class="card bg-danger text-white shadow-sm h-100">
+                <div class="card-body stat-card">
+                    <h3 class="card-title">Deleted Tasks</h3>
+                    <p class="display-4"><%= deletedTasks %></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Charts Row -->
+    <div class="row mb-4">
+        <!-- Department Chart -->
+        <div class="col-lg-8 col-md-7 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-primary text-white py-2">
+                    <h3 class="h5 mb-0">Tasks by Department</h3>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="<%= deptChartId %>"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Priority Chart -->
+        <div class="col-lg-4 col-md-5 mb-4">
+            <div class="card shadow-sm h-100">
+                <div class="card-header bg-primary text-white py-2">
+                    <h3 class="h5 mb-0">Tasks by Priority</h3>
+                </div>
+                <div class="card-body">
+                    <div class="chart-container">
+                        <canvas id="<%= priorityChartId %>"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Department Performance Table -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-secondary text-white py-2">
+                    <h3 class="h5 mb-0">Department Performance</h3>
+                </div>
+                <div class="card-body table-responsive">
+                    <table class="table table-hover">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>Department</th>
+                                <th>Tasks Created</th>
+                                <th>Tasks Completed</th>
+                                <th>Tasks Pending</th>
+                                <th>Completion Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (departmentAnalytics && departmentAnalytics.length > 0) { %>
+                                <% departmentAnalytics.forEach(dept => { %>
+                                    <tr>
+                                        <td><%= dept.department && dept.department.name ? dept.department.name : 'Unknown' %></td>
+                                        <td><%= dept.tasksCreated %></td>
+                                        <td><%= dept.tasksCompleted %></td>
+                                        <td><%= dept.tasksPending %></td>
+                                        <td><%= dept.completionRate %>%</td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="5" class="text-center">No department data available</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- User Performance Table -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-header bg-secondary text-white py-2">
+                    <h3 class="h5 mb-0">User Performance</h3>
+                </div>
+                <div class="card-body table-responsive">
+                    <table class="table table-hover">
+                        <thead class="thead-light">
+                            <tr>
+                                <th>User</th>
+                                <th>Tasks Created</th>
+                                <th>Tasks Assigned</th>
+                                <th>Tasks Completed</th>
+                                <th>Completion Rate</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% if (userAnalytics && userAnalytics.length > 0) { %>
+                                <% userAnalytics.forEach(user => { %>
+                                    <tr>
+                                        <td><%= user.user && user.user.username ? user.user.username : 'Unknown' %></td>
+                                        <td><%= user.tasksCreated %></td>
+                                        <td><%= user.tasksAssigned %></td>
+                                        <td><%= user.tasksCompleted %></td>
+                                        <td><%= user.completionRate %>%</td>
+                                    </tr>
+                                <% }); %>
+                            <% } else { %>
+                                <tr>
+                                    <td colspan="5" class="text-center">No user data available</td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Chart Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Initialize the department chart with dynamic data
+    const deptCtx<%= Date.now() %> = document.getElementById('<%= deptChartId %>').getContext('2d');
+    const deptLabels<%= Date.now() %> = <%- JSON.stringify(departmentChartData.labels) %>;
+    const deptDatasets<%= Date.now() %> = <%- JSON.stringify(departmentChartData.datasets) %>;
+    
+    new Chart(deptCtx<%= Date.now() %>, {
+        type: 'bar',
+        data: {
+            labels: deptLabels<%= Date.now() %>,
+            datasets: deptDatasets<%= Date.now() %>
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: 'Number of Tasks'
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Department'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: false
+                }
+            }
+        }
+    });
+    
+    // Initialize the priority chart with dynamic data
+    const priorityCtx<%= Date.now() %> = document.getElementById('<%= priorityChartId %>').getContext('2d');
+    const priorityLabels<%= Date.now() %> = <%- JSON.stringify(priorityChartData.labels) %>;
+    const priorityData<%= Date.now() %> = <%- JSON.stringify(priorityChartData.data) %>;
+    
+    new Chart(priorityCtx<%= Date.now() %>, {
+        type: 'pie',
+        data: {
+            labels: priorityLabels<%= Date.now() %>,
+            datasets: [{
+                data: priorityData<%= Date.now() %>,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.8)',
+                    'rgba(255, 205, 86, 0.8)',
+                    'rgba(75, 192, 192, 0.8)'
+                ],
+                borderColor: [
+                    'rgb(255, 99, 132)',
+                    'rgb(255, 205, 86)',
+                    'rgb(75, 192, 192)'
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    display: true,
+                    labels: {
+                        font: {
+                            size: 12
+                        },
+                        padding: 20,
+                        boxWidth: 15,
+                        generateLabels: function(chart) {
+                            const data = chart.data;
+                            if (data.labels.length && data.datasets.length) {
+                                return data.labels.map(function(label, i) {
+                                    const meta = chart.getDatasetMeta(0);
+                                    const style = meta.controller.getStyle(i);
+                                    
+                                    return {
+                                        text: label,
+                                        fillStyle: style.backgroundColor,
+                                        strokeStyle: style.borderColor,
+                                        lineWidth: style.borderWidth,
+                                        hidden: !chart.getDataVisibility(i),
+                                        index: i
+                                    };
+                                });
+                            }
+                            return [];
+                        }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        // Ensure tooltips show the full label text
+                        label: function(context) {
+                            const label = context.label || '';
+                            const value = context.raw || 0;
+                            return `${label}: ${value}`;
+                        }
+                    }
+                },
+                title: {
+                    display: false
+                }
+            }
+        }
+    });
+    
+    // Handle responsive legend for the priority chart
+    window.addEventListener('resize', function() {
+        Chart.instances.forEach(chart => {
+            if (chart.config.type === 'pie') {
+                // Change legend position based on screen width
+                chart.options.plugins.legend.position = window.innerWidth > 768 ? 'right' : 'bottom';
+                chart.update();
+            }
+        });
+    });
+</script>

@@ -1,0 +1,49 @@
+<div class="task-priority">
+    <!-- Section Header -->
+    <h2 style="text-align: left; margin-left: 10px;">Task Prioritization Overview</h2>
+    <!-- Canvas element for rendering the priority chart -->
+    <canvas id="priorityChart" style="max-width: 400px; max-height: 400px;"></canvas>
+</div>
+ 
+<!-- Include Chart.js library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ 
+<script>
+    // Get the 2D rendering context for the priority chart
+    const priorityCtx = document.getElementById('priorityChart').getContext('2d');
+    
+    // Extract labels (priority levels) from the priorityAnalytics object
+    const priorityLabels = <%- JSON.stringify(Object.keys(priorityAnalytics)) %>;
+    
+    // Extract data (total tasks for each priority level) from the priorityAnalytics object
+    const priorityData = <%- JSON.stringify(Object.values(priorityAnalytics).map(p => p.total)) %>;
+ 
+    // Check if there is data available for the chart
+    if (priorityLabels.length === 0 || priorityData.length === 0) {
+        // Log an error message if no data is available
+        console.error('No data available for the chart.');
+        // Log the priorityAnalytics object and extracted labels/data for debugging
+        console.log('priorityAnalytics:', <%- JSON.stringify(priorityAnalytics, null, 2) %>);
+        console.log('priorityLabels:', priorityLabels);
+        console.log('priorityData:', priorityData);
+    } else {
+        // Log the data being used to render the chart
+        console.log('Rendering chart with data:', { labels: priorityLabels, data: priorityData });
+        
+        // Create a new pie chart using Chart.js
+        new Chart(priorityCtx, {
+            type: 'pie', // Specify the chart type as 'pie'
+            data: {
+                labels: priorityLabels, // Set the labels for the chart
+                datasets: [{
+                    data: priorityData, // Set the data for the chart
+                    backgroundColor: ['red', 'orange', 'green'] // Set colors for each priority level
+                }]
+            },
+            options: {
+                responsive: true, // Make the chart responsive to screen size
+                maintainAspectRatio: true // Ensure the aspect ratio is maintained
+            }
+        });
+    }
+</script>

@@ -1,0 +1,134 @@
+<% layout('layouts/boilerplate') %>
+
+<link rel="stylesheet" href="/css/loginstyles.css">
+<div class="login-container">
+  <div class="form-section">
+    <h1>Register</h1>
+    <p class="login-subtitle">Create your RTS account</p>
+
+    <form action="/register" method="POST" class="needs-validation" novalidate>
+
+      <!-- Username -->
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="username" 
+          name="username" 
+          placeholder="Username" 
+          required 
+          minlength="3"
+          maxlength="20"
+        />
+        <div class="invalid-feedback">
+          Please enter a valid username.
+        </div>
+      </div>
+      
+      <!-- Company Code (new field) -->
+      <div class="form-group">
+        <label for="companyCode">Company Code</label>
+        <input 
+          type="text" 
+          class="form-control" 
+          id="companyCode" 
+          name="companyCode" 
+          placeholder="Enter your company code" 
+          required 
+          minlength="6"
+          maxlength="6"
+        />
+        <div class="invalid-feedback">
+          Please enter a valid 6-digit company code.
+        </div>
+      </div>
+
+      <!-- Work Email -->
+      <div class="form-group">
+        <label for="workEmail">Work Email</label>
+        <input 
+          type="email" 
+          class="form-control" 
+          id="workEmail" 
+          name="workEmail" 
+          placeholder="Work Email" 
+          required
+        />
+        <div class="invalid-feedback">
+          Please enter a valid work email address.
+        </div>
+      </div>
+
+     
+      <!-- Password -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <div class="password-input">
+          <input 
+            type="password" 
+            class="form-control" 
+            id="password" 
+            name="password" 
+            placeholder="Enter password" 
+            required 
+            minlength="6"
+          />
+          <button type="button" class="password-toggle">
+            <i class="far fa-eye"></i>
+          </button>
+        </div>
+        <div class="invalid-feedback">
+          Password must be at least 6 characters long.
+        </div>
+      </div>
+
+      <!-- Confirm Password -->
+      <div class="form-group">
+        <label for="confirm-password">Re-enter Password</label>
+        <div class="password-input">
+          <input 
+            type="password" 
+            class="form-control" 
+            id="confirm-password" 
+            name="confirmPassword" 
+            placeholder="Re-enter password" 
+            required 
+            minlength="6"
+          />
+          <button type="button" class="password-toggle">
+            <i class="far fa-eye"></i>
+          </button>
+        </div>
+        <div class="invalid-feedback">
+          Passwords must match.
+        </div>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="btn btn-success">Register</button>
+    </form>
+
+    <p class="signup-link">
+      Already have an account? <a href="/login">Login</a>
+    </p>
+  </div>
+
+  <div class="image-section">
+    <img src="/images/register.png" alt="Register illustration">
+  </div>
+</div>
+
+<script>
+  // Toggle password visibility
+  document.querySelectorAll('.password-toggle').forEach(button => {
+    button.addEventListener('click', () => {
+      const input = button.closest('.password-input').querySelector('input');
+      if (input) {
+        const type = input.type === 'password' ? 'text' : 'password';
+        input.type = type;
+        button.innerHTML = type === 'password' ? '<i class="far fa-eye"></i>' : '<i class="far fa-eye-slash"></i>';
+      }
+    });
+  });
+</script>

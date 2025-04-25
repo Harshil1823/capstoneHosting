@@ -1,0 +1,52 @@
+<% layout('layouts/boilerplate') %>
+<div class="col-md-3 col-lg-2">  <!-- Narrower side columns -->
+  <%- include('../partials/user_panel') %>
+</div>
+
+<div class="containerHistory">
+  <div class="card shadow-lg border-0 w-100" style="max-width: 75%;">
+    <div class="card-header bg-primary text-white text-center">
+      <h2 class="mb-0">Task History</h2>
+    </div>
+    <div class="card-body">
+      <% if (historyLogs.length === 0) { %>
+        <p class="text-muted text-center">No history available for this task.</p>
+      <% } else { %>
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered">
+            <thead class="thead-dark">
+              <tr>
+                <th>Date</th>
+                <th>Changed By</th>
+                <th>Changes</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% historyLogs.forEach(log => { %>
+                <tr>
+                  <td><%= log.timestamp.toLocaleString() %></td>
+                  <td><strong><%= log.changedBy.username %></strong></td>
+                  <td>
+                    <ul class="list-unstyled mb-0 text-start">
+                      <% Object.entries(log.changes).forEach(([key, value]) => { %>
+                        <li><strong class="text-primary"><%= key %></strong>: <%= value %></li>
+                      <% }); %>
+                    </ul>
+                  </td>
+                </tr>
+              <% }); %>
+            </tbody>
+          </table>
+        </div>
+      <% } %>
+    </div>
+  </div>
+</div>
+
+<style>
+  .containerHistory {
+    margin-left: 20rem; /* Adjust this value to match your user panel's width */
+    max-width: none;
+    width: 95%;
+  }
+</style>

@@ -1,0 +1,152 @@
+<% layout('layouts/boilerplate') %>
+<%- include('../partials/user_panel') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="/css/profilestyles.css">
+</head>
+<body>
+    <%- include('../partials/navbar') %>
+    
+    <div class="profile-container">
+        <!-- Profile Header -->
+        <div class="profile-header">
+            <div class="profile-image">
+                <% if (user.profileImage && user.profileImage.url) { %>
+                    <img src="<%= user.profileImage.url %>" alt="Profile Picture">
+                <% } else { %>
+                    <div class="default-profile">Default Profile Picture</div>
+                <% } %>
+            </div>
+            
+            <!-- Separate Form for Image Upload -->
+            <div class="profile-image-upload">
+                <form action="/profile" method="POST" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="profileImage">Select Profile Image:</label>
+                        <input type="file" name="profileImage" id="profileImage" accept="image/*">
+                    </div>
+                    <button type="submit" class="btn btn-secondary">Update Photo</button>
+                </form>
+            </div>
+            
+            <h1 class="profile-name"><%= user.firstName || 'User' %> <%= user.lastName || '' %></h1>
+            <p class="profile-username">@<%= user.username || 'username' %></p>
+            
+            <!-- Display Employee Info -->
+            <% if (user.hireDate) { %>
+            <p class="profile-employment-info">
+                Employee since <%= user.hireDate.toLocaleDateString() %>
+                <!-- Calculate years of service -->
+                <% 
+                const today = new Date();
+                const hireDate = new Date(user.hireDate);
+                const yearsOfService = Math.floor((today - hireDate) / (365.25 * 24 * 60 * 60 * 1000)); 
+                %>
+                (<%= yearsOfService %> <%= yearsOfService === 1 ? 'year' : 'years' %> of service)
+            </p>
+            <% } %>
+        </div>
+
+        <!-- Task Statistics -->
+        <div class="stats-container">
+            <h2>Task Statistics</h2>
+            <div class="stats-grid">
+                <!-- Removed the Total Tasks stat-box -->
+                <div class="stat-box">
+                    <span class="stat-number"><%= analytics?.tasksCompleted || 0 %></span>
+                    <span class="stat-label">Completed</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number"><%= analytics?.tasksCreated || 0 %></span>
+                    <span class="stat-label">Created</span>
+                </div>
+                <div class="stat-box">
+                    <span class="stat-number"><%= Math.round(analytics?.overdueRate || 0) %>%</span>
+                    <span class="stat-label">Overdue Rate</span>
+                </div>
+            </div>
+                    
+            <!-- Analytics-based metrics with improved formatting -->
+            <% if (analytics) { %>
+            <div class="analytics-insights">
+                <h3>Performance Insights</h3>
+                <div class="insights-grid">
+                    <div class="insight-box">
+                        <span class="insight-value">
+                            <% if (typeof analytics.averageCompletionTime === 'number') { %>
+                                <% if (analytics.averageCompletionTime < 1) { %>
+                                    <%= Math.round(analytics.averageCompletionTime * 60) %> mins
+                                <% } else { %>
+                                    <%= analytics.averageCompletionTime.toFixed(1) %> hrs
+                                <% } %>
+                            <% } else { %>
+                                0 mins
+                            <% } %>
+                        </span>
+                        <span class="insight-label">Avg. Completion Time</span>
+                    </div>
+                    <div class="insight-box">
+                        <span class="insight-value"><%= Math.round(analytics.overdueRate || 0) %>%</span>
+                        <span class="insight-label">Overdue Rate</span>
+                    </div>
+                    <div class="insight-box">
+                        <span class="insight-value"><%= analytics.tasksCreated || 0 %></span>
+                        <span class="insight-label">Created Tasks</span>
+                    </div>
+                    <div class="insight-box">
+                        <span class="insight-value"><%= analytics.tasksCompleted || 0 %></span>
+                        <span class="insight-label">Completed Tasks</span>
+                    </div>
+                </div>
+            </div>
+            <% } %>
+        </div>
+
+        <!-- Profile Details Form -->
+        <div class="profile-details">
+            <h2>Profile Information</h2>
+            <div class="editable-fields-notice">
+                <strong>Note:</strong> You can edit your work email and phone number. Other fields can only be modified by an administrator.
+            </div>
+            <form action="/profile?_method=PUT" method="POST" class="profile-form">
+                <div class="form-group">
+                    <label for="firstName">First Name</label>
+                    <input type="text" id="firstName" name="firstName" value="<%= user.firstName || '' %>" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name</label>
+                    <input type="text" id="lastName" name="lastName" value="<%= user.lastName || '' %>" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="workEmail">Work Email</label>
+                    <input type="email" id="workEmail" name="workEmail" value="<%= user.workEmail || '' %>" required>
+                </div>
+                <div class="form-group">
+                    <label for="phoneNumber">Phone Number</label>
+                    <input type="tel" id="phoneNumber" name="phoneNumber" value="<%= user.phoneNumber || '' %>">
+                </div>
+                <div class="form-group">
+                    <label for="company">Company</label>
+                    <input type="text" id="company" value="<%= user.company ? user.company.name : 'Not specified' %>" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="role">Role</label>
+                    <input type="text" id="role" value="<%= user.role || 'Not specified' %>" disabled>
+                </div>
+                <div class="form-group">
+                    <label for="hireDate">Hire Date</label>
+                    <input type="text" id="hireDate" value="<%= user.hireDate ? user.hireDate.toLocaleDateString() : 'Not specified' %>" disabled>
+                </div>
+                <button type="submit" class="btn btn-primary">Update Profile</button>
+            </form>
+            
+            <!-- Change Password Button -->
+            <div class="security-options">
+                <h3>Security Options</h3>
+                <a href="/change-password" class="btn btn-secondary">Change Password</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

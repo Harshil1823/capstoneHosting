@@ -1,0 +1,389 @@
+#calendar {
+  margin-top: 20px;
+  margin-bottom: 50px;
+  position: relative;
+  overflow: hidden;
+}
+
+body {
+  padding-bottom: 50px;
+}
+
+#calendarBody {
+  transition: transform 0.1s ease, opacity 0.1s ease;
+}
+
+#calendarBody.swipe-left {
+  animation: swipeLeft 0.1s ease forwards;
+}
+
+#calendarBody.swipe-right {
+  animation: swipeRight 0.1s ease forwards;
+}
+
+#calendarBody.swipe-out-left {
+  animation: swipeOutLeft 0.1s ease forwards;
+}
+
+#calendarBody.swipe-out-right {
+  animation: swipeOutRight 0.1s ease forwards;
+}
+
+#calendarBody.swipe-in-left {
+  animation: swipeInLeft 0.1s ease forwards;
+}
+
+#calendarBody.swipe-in-right {
+  animation: swipeInRight 0.1s ease forwards;
+}
+
+@keyframes swipeLeft {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes swipeRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes swipeOutLeft {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+}
+
+@keyframes swipeOutRight {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+}
+
+@keyframes swipeInLeft {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes swipeInRight {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.calendar-header button {
+  width: auto;
+}
+
+.calendar-header span {
+  font-size: 1.5em;
+  font-weight: bold;
+  margin: 0 10px;
+}
+
+.calendar-header > .manager-view-toggle {
+  margin-top: 10px;
+}
+
+.table-bordered td {
+  width: 14.28%;
+  height: 100px;
+  text-align: left;
+  vertical-align: top;
+  padding: 5px;
+  border: 1px solid #dee2e6;
+  position: relative;
+}
+
+.table-bordered th {
+  text-align: center;
+  vertical-align: middle;
+  border: 1px solid #dee2e6;
+}
+
+.shift-box {
+  width: 10px;
+  height: 10px;
+  background-color: #ff5273;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+}
+
+.schedule-shift-box {
+  background-color: #ff5273;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  text-align: center;
+  font-weight: bold;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  margin-bottom: 10px;
+}
+
+.schedule-shift-box::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: 10px 10px;
+  pointer-events: none;
+}
+
+.schedule-shift-box-other {
+  background-color: #b084cc;
+  color: white;
+  padding: 5px 10px;
+  border-radius: 8px;
+  font-size: 13px;
+  text-align: center;
+  font-weight: bold;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  margin-bottom: 10px;
+}
+
+.view-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 20px;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  gap: 10px;
+}
+
+.switch {
+  position: relative;
+  display: block;
+  margin: 0 auto;
+  align-items: center;
+  width: 60px;
+  height: 24px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 12px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #0d6efd;
+}
+
+input:checked + .slider:before {
+  transform: translateX(16px);
+}
+
+#viewLabel {
+  color: #333;
+  font-size: 14px;
+}
+
+.text-muted {
+  color: #d0d0d0;
+}
+
+.month-navigation-box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 5px 10px;
+  background-color: #f8f9fa;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: fit-content;
+}
+
+.month-navigation-box button {
+  width: 40px;
+  margin: 0;
+  padding: 5px 10px;
+  border-radius: 3px;
+}
+
+.month-navigation-box span {
+  font-size: 1em;
+  font-weight: bold;
+  flex-shrink: 0;
+  min-width: 120px;
+  text-align: center;
+}
+
+#monthYear {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.view-toggle .btn-group {
+  display: flex;
+  gap: 0;
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.view-toggle .btn-group .btn {
+  flex: 1;
+  padding: 15px 30px;
+  font-size: 1.1rem;
+  font-weight: bold;
+}
+
+.view-toggle .btn-group .btn:first-child {
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+.view-toggle .btn-group .btn:last-child {
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+}
+
+.view-toggle .btn-group .btn-primary {
+  background-color: #0d6efd;
+  border-color: #0d6efd;
+  color: white;
+}
+
+.view-toggle .btn-group .btn-outline-primary {
+  background-color: white;
+  border-color: #0d6efd;
+  color: #0d6efd;
+}
+
+.view-toggle .btn-group .btn:hover {
+  opacity: 0.9;
+}
+
+.manager-view-toggle {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-left: 20px;
+}
+
+.manager-view-toggle label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.manager-view-toggle .slider {
+  width: 34px;
+  height: 20px;
+  background-color: #ccc;
+  border-radius: 34px;
+  position: relative;
+  transition: 0.4s;
+}
+
+.manager-view-toggle .slider:before {
+  content: "";
+  position: absolute;
+  height: 14px;
+  width: 14px;
+  background-color: white;
+  border-radius: 50%;
+  bottom: 3px;
+  left: 3px;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: #0d6efd;
+}
+
+input:checked + .slider:before {
+  transform: translateX(14px);
+}
+
+.manager-view-toggle span {
+  font-size: 14px;
+  color: #333;
+}
+
+.btn.active {
+  background-color:#6610f2;
+  color: white;
+  border-color:#6610f2;
+}
